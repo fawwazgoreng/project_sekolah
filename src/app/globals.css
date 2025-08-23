@@ -18,10 +18,53 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  @apply overflow-x-hidden;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+.Nav a {
+  @apply hover:text-hijau;
+}
+
+.menu {
+  @apply flex flex-col sm:gap-1.5 gap-[5px] lg:hidden items-end justify-center w-full duration-0;
+}
+
+.menu span {
+  @apply w-10 h-1 rounded-full bg-black duration-500;
+}
+
+.menuActive :nth-child(2) {
+  @apply  rotate-45 translate-y-2 ;
+}
+
+.menuActive :nth-child(3) {
+  @apply opacity-0;
+}
+
+.menuActive :nth-child(4) {
+  @apply  -rotate-45 sm:-translate-y-3 -translate-y-2 ;
+}
+
+.aside {
+  @apply w-full h-[300px] absolute bg-hijau z-50 duration-500 lg:hidden overflow-hidden flex justify-around flex-col text-[20px] font-extrabold;
+}
+
+.asideNonActive {
+  @apply w-full h-0 absolute duration-500 z-50 bg-hijau overflow-hidden flex flex-col font-bold text-[20px] ;
+}
+
+.berita-slick .slick-slide > div {
+  @apply m-10;
+}
+
+@keyframes infiniteScale {
+  0% , 100% {
+    scale: 100%;
+  } 50% {
+    scale: 110%;
   }
+}
+
+.infiniteScales {
+  animation: infiniteScale 12s linear 10s infinite alternate;
 }

@@ -11,6 +11,8 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        hijau: "#00978F",
+        second: "#A8A8A8",
       },
     },
   },
