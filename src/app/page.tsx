@@ -57,13 +57,13 @@ export default function Home() {
             </article>
             <div className="md:w-1/2 sm:w-10/12 h-full flex flex-col items-center text-center">
               <p className="text-white mb-3 font-light text-[16px]">Kurikulum Merdeka</p>
-              <Image className="md:w-96 w-full h-72 overflow-hidden  rounded-lg " src={Tjkt} alt="" width={400} height={400} />
+              <Image className="w-full md:max-w-96 max-w-[400px] md:w-96 h-72 overflow-hidden  rounded-lg " src={Tjkt} alt="" width={400} height={400} />
             </div>
           </div>
           <div className="flex my-10 w-full mx-auto gap-10 justify-center">
             <div className="md:w-1/2 sm:w-10/12 h-full flex flex-col items-center text-center">
               <p className="text-white mb-3 font-light text-[16px]">Teaching factory</p>
-              <Image className="md:w-96 w-full h-72 overflow-hidden  rounded-lg " src={A} alt="" width={400} height={400} />
+              <Image className="w-full md:max-w-96 max-w-[400px] md:w-96 h-72 overflow-hidden  rounded-lg " src={A} alt="" width={400} height={400} />
             </div>
             <article className="hidden md:flex w-1/2 h-1/2 mt-[25px] text-wrap-n text-center ">
               <p className="text-white leading-8 font-light text-[14px] lg:text-[15px]">Metode TEFA merupakan gabungan dari dua metode pembelajaran, yaitu CBT (Competency Based Training) dan PBT (Production Based Training). CBT merupakan proses pelatihan yang bertujuan untuk mengembangkan kompetensi yang diperlukan oleh peserta didik, sementara PBT adalah proses pembelajaran

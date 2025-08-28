@@ -5,7 +5,7 @@ export default function Gallery() {
     return (
         <div className="container-fluid">
             <div className="w-11/12 md:w-5/6 flex mx-auto flex-wrap justify-center items-center gap-4 ">
-                <div className="lg:w-[30%] md:w-[48%] sm:w-2/3 w-full group relative overflow-hidden rounded-lg">
+                <div className="lg:w-[30%] xl:w-[23%] sm:w-[48%] w-full group relative overflow-hidden rounded-lg">
                     <Image src={Wkk} alt="" width={800} height={800} className="group-hover:blur-sm duration-500"/>
                     <div className="absolute top-full flex flex-col bg-black opacity-50 font-bold text-white z-10 group-hover:top-0 duration-500 w-full h-0 overflow-hidden group-hover:w-full group-hover:h-full">
                     </div>
@@ -17,7 +17,7 @@ export default function Gallery() {
                         </span>
                     </div>
                 </div>
-                <div className="lg:w-[30%] md:w-[48%] sm:w-2/3 w-full group relative overflow-hidden rounded-lg">
+                <div className="lg:w-[30%] xl:w-[23%] sm:w-[48%] w-full group relative overflow-hidden rounded-lg">
                     <Image src={Wkk} alt="" width={800} height={800} className="group-hover:blur-sm duration-500"/>
                     <div className="absolute top-full flex flex-col bg-black opacity-50 font-bold text-white z-10 group-hover:top-0 duration-500 w-full h-0 overflow-hidden group-hover:w-full group-hover:h-full">
                     </div>
@@ -29,7 +29,7 @@ export default function Gallery() {
                         </span>
                     </div>
                 </div>
-                <div className="lg:w-[30%] md:w-[48%] sm:w-2/3 w-full group relative overflow-hidden rounded-lg">
+                <div className="lg:w-[30%] xl:w-[23%] sm:w-[48%] w-full group relative overflow-hidden rounded-lg">
                     <Image src={Wkk} alt="" width={800} height={800} className="group-hover:blur-sm duration-500"/>
                     <div className="absolute top-full flex flex-col bg-black opacity-50 font-bold text-white z-10 group-hover:top-0 duration-500 w-full h-0 overflow-hidden group-hover:w-full group-hover:h-full">
                     </div>
@@ -41,7 +41,7 @@ export default function Gallery() {
                         </span>
                     </div>
                 </div>
-                <div className="lg:w-[30%] md:w-[48%] sm:w-2/3 w-full group relative overflow-hidden rounded-lg">
+                <div className="lg:w-[30%] xl:w-[23%] sm:w-[48%] w-full group relative overflow-hidden rounded-lg">
                     <Image src={Wkk} alt="" width={800} height={800} className="group-hover:blur-sm duration-500"/>
                     <div className="absolute top-full flex flex-col bg-black opacity-50 font-bold text-white z-10 group-hover:top-0 duration-500 w-full h-0 overflow-hidden group-hover:w-full group-hover:h-full">
                     </div>
@@ -53,7 +53,7 @@ export default function Gallery() {
                         </span>
                     </div>
                 </div>
-                <div className="lg:w-[30%] md:w-[48%] sm:w-2/3 w-full group relative overflow-hidden rounded-lg">
+                <div className="lg:w-[30%] xl:w-[23%] sm:w-[48%] w-full group relative overflow-hidden rounded-lg">
                     <Image src={Wkk} alt="" width={800} height={800} className="group-hover:blur-sm duration-500"/>
                     <div className="absolute top-full flex flex-col bg-black opacity-50 font-bold text-white z-10 group-hover:top-0 duration-500 w-full h-0 overflow-hidden group-hover:w-full group-hover:h-full">
                     </div>
@@ -65,7 +65,7 @@ export default function Gallery() {
                         </span>
                     </div>
                 </div>
-                <div className="lg:w-[30%] md:w-[48%] sm:w-2/3 w-full group relative overflow-hidden rounded-lg">
+                <div className="lg:w-[30%] xl:w-[23%] sm:w-[48%] w-full group relative overflow-hidden rounded-lg">
                     <Image src={Wkk} alt="" width={800} height={800} className="group-hover:blur-sm duration-500"/>
                     <div className="absolute top-full flex flex-col bg-black opacity-50 font-bold text-white z-10 group-hover:top-0 duration-500 w-full h-0 overflow-hidden group-hover:w-full group-hover:h-full">
                     </div>

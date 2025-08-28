@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "typeRoots": [
+      "./src/app/types",
+      "./node_modules/@types"
+    ],
     "lib": [
       "dom",
       "dom.iterable",

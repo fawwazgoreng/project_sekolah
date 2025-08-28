@@ -25,14 +25,22 @@ const NavBar = () => {
             <div className="container-fluid w-full py-2 text-white bg-hijau hidden md:flex">
                 <div className="md:flex w-11/12 xl:w-10/12 mx-auto items-center hidden">
                     <span className="flex items-center justify-start w-1/6">
+                    <Link href={""} target="blank" className="flex items-center gap-1">
                         <Image className="lg:w-8 md:w-6" src={wa} alt="" width={400} height={400} />
                         <p className="font-extrabold text-[10px] lg:text-[15px]">123-456-789</p>
+                    </Link>
                     </span>
                     <p className=" hidden text-[10px] lg:text-[13px] xl:text-[15px] md:flex w-4/6 items-center justify-center">Jl. Kelet Ploso No.KM 36, Karang Anyar, Kelet, Kec. Keling, Kabupaten Jepara, Jawa Tengah 59454</p>
                     <span className="flex w-1/6 justify-end">
+                    <Link href={""} target="blank">
                         <Image className="lg:w-8 md:w-6" src={Facebook} alt="" width={400} height={400} />
+                    </Link>
+                    <Link href={""} target="blank">
                         <Image className="lg:w-8 md:w-6" src={Instagram} alt="" width={400} height={400} />
+                    </Link>
+                    <Link href={""} target="blank">
                         <Image className="lg:w-8 md:w-6" src={Yt} alt="" width={400} height={400} />
+                    </Link>
                     </span>
                 </div>
             </div>
@@ -45,7 +53,7 @@ const NavBar = () => {
                         <Link href={"/"} className={linkClass("/")}>Home</Link>
                         <div className="NavActive group">
                             <p className={`cursor-pointer ${linkClass("/prestasi")} ${linkClass("/komite")} ${linkClass("/sejarah")} ${linkClass("/visimisi")}`}>Profil</p>
-                            <div className="opacity-0 duration-500 w-40 flex flex-col h-0 group-hover:h-40 group-hover:opacity-100 bg-white top-[112px] xl:top-32 overflow-hidden absolute z-10 justify-around text-[15px] text-black">
+                            <div className="opacity-0 duration-500 w-40 -translate-x-2 flex flex-col h-0 group-hover:h-32 group-hover:opacity-100 bg-white top-[112px] xl:top-32 overflow-hidden absolute z-10 justify-around text-[15px] text-black">
                                 <div className="max-h-5 lg:max-h-10 lg:h-10"></div>
                                 <Link href={"/sejarah"} className={`p-2 ${linkClass("/sejarah")}`}>Sejarah</Link>
                                 <Link href={"/visimisi"} className={`p-2 ${linkClass("/visimisi")}`}>Visi , Misi dan Moto</Link>

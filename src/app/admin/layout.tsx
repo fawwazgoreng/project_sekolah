@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "../globals.css";
 import { Poppins } from "next/font/google";
-import LayoutWrapper from "./component/layoutWrapper";
 
 
 const poppins = Poppins({
@@ -24,9 +23,7 @@ export default function RootLayout({
             <body
                 className={`${poppins.className} antialiased capitalize`}
             >
-                <LayoutWrapper>
                     {children}
-                </LayoutWrapper>
             </body>
         </html>
     );
