@@ -45,12 +45,28 @@ export default function Profil() {
             <div className="w-full h-44 bg-transparent"></div>
             <div className="w-5/6 md:w-11/12 flex gap-8 flex-col mx-auto">
             <h1 className="text-center w-full text-3xl font-bold text-hijau underline decoration-[5px] underline-offset-[10px]">pengembangan diri</h1>
-            <div className="w-full flex justify-between">
-                <span className="w-[43%]">
-                    <h1>Extrakulikuner : </h1>
+            <div className="w-full flex flex-wrap gap-y-24 justify-between">
+                <span className="md:w-[43%] w-full">
+                    <h1 className="text-2xl pb-5">Extrakulikuner : </h1>
+                    <ol type="1" className="text-lg">
+                        <li>yttts</li>
+                        <li>yttts</li>
+                        <li>yttts</li>
+                        <li>yttts</li>
+                        <li>yttts</li>
+                        <li>yttts</li>
+                    </ol>
                 </span>
-                <span className="w-[43%]">
-                
+                <span className="md:w-[43%] w-full">
+                    <h1 className="text-2xl pb-5">program pembelajaran : </h1>
+                    <ol type="1" className="text-lg">
+                        <li>yttts</li>
+                        <li>yttts</li>
+                        <li>yttts</li>
+                        <li>yttts</li>
+                        <li>yttts</li>
+                        <li>yttts</li>
+                    </ol>
                 </span>
             </div>
             </div>

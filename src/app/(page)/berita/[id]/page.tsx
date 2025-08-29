@@ -6,6 +6,7 @@ import Link from 'next/link';
 
 export default function BeritaDetail({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
+    console.log(id);
     return (
         <>
             <div className='mt-5 w-11/12 flex lg:flex-row flex-col mx-auto justify-between'>

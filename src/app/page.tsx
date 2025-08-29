@@ -37,7 +37,7 @@ export default function Home() {
             <p className="font-bold lg:text-[35px] xl:text-[40px] lg:mt-2 md:text-[20px]">SMK WIKRAMA 1 JEPARA </p>
             <p className="text-[13px] lg:text-[15px]">SMK Wikrama 1 Jepara merupakan salah satu Lembaga Pendidikan Menengah kejuruan yang terletak di Jl.Kelet-Bangsri KM.20,Desa Kelet,Kecamatan Keling Kabupaten Jepara, Jawa Tengah.</p>
             <div className="flex lg:mt-4 mt-2">
-              <Image className=" h-11" src={Warranty} alt="" />
+              <Image className=" h-11 w-11" src={Warranty} alt=""  width={800} height={800} />
               <p className="mt-2">Accredited B</p>
             </div>
             <div className="bg-hijau mt-2 lg:mt-4 lg:w-40 w-32 rounded-lg text-center align-middle hover:bg-blue-500 duration-500 ">
@@ -57,13 +57,13 @@ export default function Home() {
             </article>
             <div className="md:w-1/2 sm:w-10/12 h-full flex flex-col items-center text-center">
               <p className="text-white mb-3 font-light text-[16px]">Kurikulum Merdeka</p>
-              <Image className="w-full md:max-w-96 max-w-[400px] md:w-96 h-72 overflow-hidden  rounded-lg " src={Tjkt} alt="" width={400} height={400} />
+              <Image className="w-full md:max-w-96 max-w-[400px] md:w-96 h-72 overflow-hidden  rounded-lg " src={Tjkt} alt=""  width={800} height={800}/>
             </div>
           </div>
           <div className="flex my-10 w-full mx-auto gap-10 justify-center">
             <div className="md:w-1/2 sm:w-10/12 h-full flex flex-col items-center text-center">
               <p className="text-white mb-3 font-light text-[16px]">Teaching factory</p>
-              <Image className="w-full md:max-w-96 max-w-[400px] md:w-96 h-72 overflow-hidden  rounded-lg " src={A} alt="" width={400} height={400} />
+              <Image className="w-full md:max-w-96 max-w-[400px] md:w-96 h-72 overflow-hidden  rounded-lg " src={A} alt="" width={800} height={800} />
             </div>
             <article className="hidden md:flex w-1/2 h-1/2 mt-[25px] text-wrap-n text-center ">
               <p className="text-white leading-8 font-light text-[14px] lg:text-[15px]">Metode TEFA merupakan gabungan dari dua metode pembelajaran, yaitu CBT (Competency Based Training) dan PBT (Production Based Training). CBT merupakan proses pelatihan yang bertujuan untuk mengembangkan kompetensi yang diperlukan oleh peserta didik, sementara PBT adalah proses pembelajaran
@@ -79,25 +79,25 @@ export default function Home() {
         </article>
         <div className=" md:mt-10 flex w-4/5 mx-auto mt-4 gap-30 justify-center flex-col lg:flex-row flex-wrap items-center gap-10">
           <div className="md:w-96 md:h-96 h-80 w-80 shadow-lg inset-shadow-xs rounded-lg  flex justify-center  flex-col items-center">
-            <Image width={400} height={400} className="w-20 h-1w-20 mt-4" src={Laptop} alt="" />
+            <Image width={800} height={800} className="w-20 h-1w-20 mt-4" src={Laptop} alt="" />
             <article className="w-5/6 h-50 mt-4  text-wrap text-center">
               <p className="leading-5">Sekolah kejurusan yang berfokus dalam perkembangan dunia teknologi  yang sejajar dengan perkembagan zaman</p>
             </article>
           </div>
           <div className="md:w-96 md:h-96 h-80 w-80 shadow-lg inset-shadow-xs rounded-lg  flex justify-center  flex-col items-center">
-            <Image width={400} height={400} className="w-20 h-1w-20 mt-4 " src={Graduation} alt="" />
+            <Image width={800} height={800} className="w-20 h-1w-20 mt-4 " src={Graduation} alt="" />
             <article className="w-5/6 h-50 mt-4  text-wrap text-center">
               <p className="leading-5">Sekolah kejurusan yang mengamalkan nilai sosial , nilai moral dan mengamalkan pancasila dalam kehidupan sehari hari</p>
             </article>
           </div>
           <div className="md:w-96 md:h-96 h-80 w-80 mt-20 shadow-lg inset-shadow-xs rounded-lg  flex justify-center  flex-col items-center">
-            <Image width={400} height={400} className="w-20 h-1w-20 mt-4" src={Factory} alt="" />
+            <Image width={800} height={800} className="w-20 h-1w-20 mt-4" src={Factory} alt="" />
             <article className="w-5/6 h-50 mt-4  text-wrap text-center">
               <p className="leading-5">sekolah yang memiliki model pembelajaran berbasis industri yang menggabungkan teori dan praktik di lingkungan kerja yang sebenarnya, bertujuan untuk menghasilkan lulusan yang kompeten sesuai dengan kebutuhan dunia industri.</p>
             </article>
           </div>
           <div className="md:w-96 md:h-96 h-80 w-80 mt-20 shadow-lg inset-shadow-xs rounded-lg  flex justify-center  flex-col items-center">
-            <Image width={400} height={400} className="w-20 h-1w-20 mt-4 " src={Stairs} alt="" />
+            <Image width={800} height={800} className="w-20 h-1w-20 mt-4 " src={Stairs} alt="" />
             <article className="w-5/6 h-50 mt-4  text-wrap text-center">
               <p className="leading-5">Lulusan SMK Wikrama memiliki berbagai pilihan karir yang sesuai dengan keahlian yang mereka kuasai, mulai dari bekerja di perusahaan hingga menjadi wirausaha</p>
             </article>
