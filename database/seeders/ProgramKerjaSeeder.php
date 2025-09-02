@@ -2,12 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Models\About;
+use App\Models\ProgramKerja;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 
-class AboutSeeder extends Seeder
+class ProgramKerjaSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,9 +16,9 @@ class AboutSeeder extends Seeder
     {
         $faker = Faker::create('id_ID');
         for ($i = 0; $i < 2; $i++){
-            About::create([
-                'gambar'     => $faker->imageUrl(1920, 600, 'business', true, "Slide {$i}"),
+            ProgramKerja::create([
                 'judul'      => $faker->sentence(6),
+                'gambar'     => $faker->imageUrl(1920, 600, 'business', true, "Slide {$i}"),
                 'deskripsi'  => $faker->paragraph(5),
             ]);
         }
