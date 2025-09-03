@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AboutController;
 use App\Http\Controllers\Api\BeritaController;
+use App\Http\Controllers\Api\KesiswaanController;
 use App\Http\Controllers\Api\SlideController;
 use App\Http\Controllers\Api\VisiMisiController;
 use Illuminate\Http\Request;
@@ -25,4 +26,8 @@ Route::apiResource('berita',
 
 Route::apiResource('visi_misi',
     VisiMisiController::class
+);
+
+Route::apiResource('kesiswaan',
+    KesiswaanController::class
 );

@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Berita;
+use App\Models\Kesiswaan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class BeritaController extends Controller
+class KesiswaanController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +15,7 @@ class BeritaController extends Controller
     public function index()
     {
         // tampilkan semua data
-        $data = Berita::all();
+        $data = Kesiswaan::all();
         return response()->json([
             'status' => true,
             'message' => 'data ditemukan',
@@ -29,13 +29,12 @@ class BeritaController extends Controller
     public function store(Request $request)
     {
         // membuat variabel dari model
-        $data = new Berita;
+        $data = new Kesiswaan;
 
         // ketentuan valuenya
         $rules = [
             'gambar' => 'required|url',
             'judul' => 'required',
-            'deskripsi' => 'required'
         ];
 
         // validator manual jika gagal tambah
@@ -55,7 +54,7 @@ class BeritaController extends Controller
     public function show(string $id)
     {
         // mencari data dengan id
-        $data = Berita::find($id);
+        $data = Kesiswaan::find($id);
 
         // if else jika ada dan tidak ada
         if($data) {
@@ -78,7 +77,7 @@ class BeritaController extends Controller
     public function update(Request $request, string $id)
     {
         // mencari data dengan id
-        $data = Berita::find($id);
+        $data = Kesiswaan::find($id);
 
         // jika id tidak ada
         if(empty($data)) {
@@ -92,7 +91,6 @@ class BeritaController extends Controller
         $rules = [
             'gambar' => 'required|url',
             'judul' => 'required',
-            'deskripsi' => 'required'
         ];
 
         // validator jika gagal
@@ -108,7 +106,6 @@ class BeritaController extends Controller
         // input data
         $data->gambar = $request->gambar;
         $data->judul = $request->judul;
-        $data->deskripsi = $request->deskripsi;
         
         //data di save
         $update = $data->save();
@@ -125,7 +122,7 @@ class BeritaController extends Controller
     public function destroy(string $id)
     {
         // mecari data menggunakan id
-        $data = Berita::find($id);
+        $data = Kesiswaan::find($id);
 
         // jika data tidak ditemukan
         if (empty($data)) {
