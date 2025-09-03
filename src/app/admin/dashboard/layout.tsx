@@ -30,12 +30,12 @@ export default function RootLayout({
                 <SessionProvider>
                     <div className="flex md:flex-row flex-col h-screen overflow-hidden bg-second">
                         {/* Sidebar */}
-                        <div className="md:w-48 w-full bg-second text-white overflow-y-auto">
+                        <div className="md:w-48 w-full min-h-14 bg-hijau text-white overflow-y-auto">
                             <NavBarAdmin />
                         </div>
                         {/* Main Content */}
                         <div className="flex-1 h-full overflow-y-auto">
-                            <div className="md:w-11/12 md:rounded-xl min-h-screen max-w-7xl mx-auto bg-white p-6 md:mb-8 mt-8 shadow">
+                            <div className="md:w-11/12 md:rounded-xl min-h-screen max-w-7xl mx-auto bg-white p-6 md:mb-8 md:mt-8 shadow">
                                 {children}
                             </div>
                         </div>

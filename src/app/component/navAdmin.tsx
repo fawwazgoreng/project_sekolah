@@ -3,8 +3,6 @@
 import { useState } from 'react';
 import Image, { StaticImageData } from 'next/image';
 import Link from 'next/link';
-
-import Account from '@/public/account.png';
 import AccountWt from '@/public/adminwt.png';
 import AccountBl from '@/public/adminbl.png';
 import slidewt from '@/public/slidewt.png';
@@ -31,7 +29,6 @@ interface NavItemProps {
 
 const NavItem: React.FC<NavItemProps> = ({ defaultImg, hoverImg, label, href = '' }) => {
   const [isHovering, setIsHovering] = useState(false);
-
   return (
     <Link
       href={href}
@@ -56,37 +53,93 @@ const NavItem: React.FC<NavItemProps> = ({ defaultImg, hoverImg, label, href = '
 };
 
 const NavBarAdmin = () => {
+  const [isActive, setIsActive] = useState(false);
   return (
     <div>
       <div className="w-full md:flex flex-nowrap hidden">
-        <div className="w-48 h-full fixed md:flex flex-col bg-hijau text-white">
-          <div className="justify-between items-center mt-4 w-4/5 flex mx-auto bg-white rounded-md">
-            <span className="w-1/3">
-              <Image className="w-11 h-11" src={Account} alt="Admin Icon" width={800} height={800} />
-            </span>
-            <h1 className="w-2/3 text-black font-semibold text-md">Admin</h1>
+        <div className=" h-full md:w-64 md:h-screen md:flex justify-between flex-col bg-white md:bg-hijau text-white">
+          <div className="w-11/12 mx-auto h-1/2 mt-4 flex flex-col items-center justify-center gap-2">
+            <Link href={`/admin/dashboard/`}
+              className="w-full rounded-md hover:bg-blue-500 duration-200 h-20 text-2xl font-semibold capitalize flex items-center"
+            >
+              <p className='ml-[10%] capitalize'>
+                slide
+              </p>
+            </Link>
+            <Link href={`/admin/dashboard/fasilitas`}
+              className="w-full rounded-md hover:bg-blue-500 duration-200 h-20 text-2xl font-semibold capitalize flex items-center"
+            >
+              <p className='ml-[10%] capitalize'>
+                fasilitas
+              </p>
+            </Link>
+            <Link href={`/admin/dashboard/program`}
+              className="w-full rounded-md hover:bg-blue-500 duration-200 h-20 text-2xl font-semibold capitalize flex items-center"
+            >
+              <p className='ml-[10%] capitalize'>
+                program
+              </p>
+            </Link>
+            <Link href={`/admin/dashboard/sejarah`}
+              className="w-full rounded-md hover:bg-blue-500 duration-200 h-20 text-2xl font-semibold capitalize flex items-center"
+            >
+              <p className='ml-[10%] capitalize'>
+                sejarah
+              </p>
+            </Link>
+            <Link href={`/admin/dashboard/visimisi`}
+              className="w-full rounded-md hover:bg-blue-500 duration-200 h-20 text-2xl font-semibold capitalize flex items-center"
+            >
+              <p className='ml-[10%] capitalize'>
+                visi misi
+              </p>
+            </Link>
+            <Link href={`/admin/dashboard/berita`}
+              className="w-full rounded-md hover:bg-blue-500 duration-200 h-20 text-2xl font-semibold capitalize flex items-center"
+            >
+              <p className='ml-[10%] capitalize'>
+                berita
+              </p>
+            </Link>
+            <Link href={`/admin/dashboard/prestasi`}
+              className="w-full rounded-md hover:bg-blue-500 duration-200 h-20 text-2xl font-semibold capitalize flex items-center"
+            >
+              <p className='ml-[10%] capitalize'>
+                prestasi
+              </p>
+            </Link>
+            <Link href={`/admin/dashboard/mading`}
+              className="w-full rounded-md hover:bg-blue-500 duration-200 h-20 text-2xl font-semibold capitalize flex items-center"
+            >
+              <p className='ml-[10%] capitalize'>
+                mading
+              </p>
+            </Link>
+            <Link href={`/admin/dashboard/admin`}
+              className="w-full rounded-md hover:bg-blue-500 duration-200 h-20 text-2xl font-semibold capitalize flex items-center"
+            >
+              <p className='ml-[10%] capitalize'>
+                admin
+              </p>
+            </Link>
           </div>
-          <div className="w-full h-1/2 mt-4 flex flex-col items-center">
-            {['slide', 'about', 'sejarah', 'visi misi', 'berita', 'prestasi', 'kesiswaan', 'admin'].map((label) => (
-              <Link href={`/admin/dashboard/${label}`}
-                key={label}
-                className="w-full rounded-md hover:bg-blue-500 duration-200 h-10 text-2xl font-semibold capitalize flex"
-              >
-                <p className='ml-[10%]'>
-                {label}
-                </p>
-              </Link>
-            ))}
-          </div>
+          <button className='mb-7 text-xl text-center items-center justify-center text-white bg-red-600 rounded-md w-28 font-bold flex mx-auto px-3 py-2'>Log out</button>
         </div>
       </div>
       {/* Mobile Navigation */}
-      <div className="w-11/12 sm:w-4/6 flex mx-auto pt-5">
-        <div className="w-full md:hidden flex justify-center gap-4 flex-wrap">
+      <div className={isActive ? "w-11/12 flex flex-col mx-auto pt-5 overflow-y-hidden md:hidden" : "md:hidden overflow-y-hidden w-11/12 flex flex-col mx-auto pt-5"}>
+        <div className={isActive ? "menu menuActive" : "menu"}>
+          <button className=" opacity-0 z-50 w-20 h-20 absolute right-4  lg:hidden bg-black " onClick={() => setIsActive(!isActive)}></button>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div className={isActive ? "w-11/12 sm:w-5/6 h-64 sm:h-40 mx-auto md:hidden flex justify-center gap-2 flex-wrap duration-500" : "mx-auto md:hidden flex justify-center gap-2 flex-wrap duration-500 opacity-0 w-full h-0"}>
           <NavItem defaultImg={slidebl} hoverImg={slidewt} label="Slide" href='/admin/dashboard' />
-          <NavItem defaultImg={aboutbl} hoverImg={aboutwt} label="About" href='/admin/dashboard/about' />
+          <NavItem defaultImg={aboutbl} hoverImg={aboutwt} label="Fasilitas" href='/admin/dashboard/fasilitas' />
+          <NavItem defaultImg={aboutbl} hoverImg={aboutwt} label="Program" href='/admin/dashboard/program' />
           <NavItem defaultImg={hitorybl} hoverImg={hitorywt} label="Sejarah" href='/admin/dashboard/sejarah' />
-          <NavItem defaultImg={visibl} hoverImg={visiwt} label="Visi Misi" href='/admin/visimisi' />
+          <NavItem defaultImg={visibl} hoverImg={visiwt} label="Visi Misi" href='/admin/dashboard/visimisi' />
           <NavItem defaultImg={newsbl} hoverImg={newswt} label="Berita" href='/admin/dashboard/berita' />
           <NavItem defaultImg={achibl} hoverImg={achiwt} label="Prestasi" href='/admin/dashboard/prestasi' />
           <NavItem defaultImg={madingbl} hoverImg={madingwt} label="Mading" href='/admin/dashboard/mading' />

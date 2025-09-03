@@ -24,7 +24,7 @@ export default function LoginAdmin() {
           <div className="w-full h-full px-[10px] rounded-md shadow-lg inset-shadow-xs mt-5">
             <p className="font-bold text-[35px] text-blue-500 text-center">Sign in</p>
             <form
-              className="flex flex-col gap-10 mt-[5vh]"
+              className="flex flex-col gap-10 mt-[5vh] p-2"
               onSubmit={handleSubmit}
             >
               <div className="relative z-0">

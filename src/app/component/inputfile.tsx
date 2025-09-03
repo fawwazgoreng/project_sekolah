@@ -21,7 +21,6 @@ export const UploadPage = () => {
         method: 'POST',
         body: formData,
       });
-
       if (res.ok) {
         alert('File berhasil diupload!');
       } else {

@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 
-export default function AddBeritaAdmin() {
+export default function AddMadingAdmin() {
   const [preview, setPreview] = useState<string>("");
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -30,10 +30,6 @@ export default function AddBeritaAdmin() {
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis vero incidunt rem iste molestias ducimus aliquam quam necessitatibus porro sint minima quasi unde culpa nihil neque odio possimus, alias fugit laudantium eos, doloribus eius mollitia. Dolore repudiandae tempora est laudantium illo, odio obcaecati quidem fugiat consectetur enim eos numquam magnam molestias possimus quos sit maxime culpa unde fugit sint recusandae harum quod! Reiciendis voluptates quod aut error libero, tempore molestiae exercitationem nisi ea unde ipsum cupiditate pariatur, natus eveniet repellat commodi blanditiis hic, modi dignissimos quaerat mollitia amet! Accusamus beatae veritatis incidunt recusandae consectetur ex minima numquam dolore veniam in?
                     `}>
           </textarea>
-        </span>
-        <span className="flex gap-2 flex-col">
-          <label className="text-2xl font-bold" htmlFor="tanggal">Tanggal</label>
-          <input className="border-slate-500 outline-slate-500 bg-slate-100 p-2" type="date" id="tanggal" name="tanggal" />
         </span>
         <button className="px-4 flex items-center  py-3 w-[100px] h-10 bg-blue-600 text-white rounded">Submit</button>
       </form>
