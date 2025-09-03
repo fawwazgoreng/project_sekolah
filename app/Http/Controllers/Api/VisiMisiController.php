@@ -102,9 +102,9 @@ class VisiMisiController extends Controller
 
         // ketentuan value data
         $rules = [
-            'gambar' => 'required|url',
-            'judul' => 'required',
-            'deskripsi' => 'required'
+            'visi' => 'required',
+            'misi' => 'required',
+            'moto' => 'required',
         ];
 
         // validator jika gagal

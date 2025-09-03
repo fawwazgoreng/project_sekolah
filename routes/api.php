@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AboutController;
 use App\Http\Controllers\Api\BeritaController;
+use App\Http\Controllers\Api\EkstrakulikulerController;
 use App\Http\Controllers\Api\FasilitasController;
 use App\Http\Controllers\Api\KesiswaanController;
 use App\Http\Controllers\Api\PrestasiController;
@@ -9,7 +10,6 @@ use App\Http\Controllers\Api\ProgramKerjaController;
 use App\Http\Controllers\Api\SejarahController;
 use App\Http\Controllers\Api\SlideController;
 use App\Http\Controllers\Api\VisiMisiController;
-use App\Models\Ekstrakulikuler;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,7 +25,7 @@ Route::apiResource('about',
     AboutController::class
 );
 
-Route::apiResource('program_kerja',
+Route::apiResource('programkerja',
     ProgramKerjaController::class
 );
 
@@ -33,7 +33,7 @@ Route::apiResource('berita',
     BeritaController::class
 );
 
-Route::apiResource('visi_misi',
+Route::apiResource('visimisi',
     VisiMisiController::class
 );
 
@@ -53,6 +53,6 @@ Route::apiResource('fasilitas',
     FasilitasController::class
 );
 
-Route::apiResource('ekstrakulikuler',
-    Ekstrakulikuler::class
+Route::apiResource('ekstra',
+    EkstrakulikulerController::class
 );
