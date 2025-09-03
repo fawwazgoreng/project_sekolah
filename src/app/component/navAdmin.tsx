@@ -1,5 +1,6 @@
 'use client';
 
+import { signOut } from 'next-auth/react';
 import { useState } from 'react';
 import Image, { StaticImageData } from 'next/image';
 import Link from 'next/link';
@@ -123,7 +124,7 @@ const NavBarAdmin = () => {
               </p>
             </Link>
           </div>
-          <button className='mb-7 text-xl text-center items-center justify-center text-white bg-red-600 rounded-md w-28 font-bold flex mx-auto px-3 py-2'>Log out</button>
+          <button onClick={() => signOut({callbackUrl: "/admin"})} className='mb-7 text-xl text-center items-center justify-center text-white bg-red-600 rounded-md w-28 font-bold flex mx-auto px-3 py-2'>Log out</button>
         </div>
       </div>
       {/* Mobile Navigation */}
