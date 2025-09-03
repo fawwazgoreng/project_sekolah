@@ -10,12 +10,21 @@ use App\Http\Controllers\Api\ProgramKerjaController;
 use App\Http\Controllers\Api\SejarahController;
 use App\Http\Controllers\Api\SlideController;
 use App\Http\Controllers\Api\VisiMisiController;
+use App\Http\Controllers\Api\AuthController; 
+use App\Http\Controllers\Api\UserController; 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+
+Route::post('register', [Authcontroller::class, 'register']);
+Route::post('login', [Authcontroller::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function(){
+    Route::resource('users', UserController::class);
+});
 
 Route::apiResource('slide', 
     SlideController::class
