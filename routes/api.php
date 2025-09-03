@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AboutController;
 use App\Http\Controllers\Api\BeritaController;
 use App\Http\Controllers\Api\SlideController;
+use App\Http\Controllers\Api\VisiMisiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,4 +21,8 @@ Route::apiResource('about',
 
 Route::apiResource('berita',
     BeritaController::class
+);
+
+Route::apiResource('visi_misi',
+    VisiMisiController::class
 );
