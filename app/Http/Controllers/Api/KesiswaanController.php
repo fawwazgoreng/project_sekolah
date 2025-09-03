@@ -46,6 +46,17 @@ class KesiswaanController extends Controller
                 'data' => $validator->errors(),
             ], 404);
         }
+
+        // validasi tambah data
+        $data->gambar = $request->gambar;
+        $data->judul = $request->judul;
+        $post = $data->save();
+
+        // mengvalidasi data sukses
+        return response()->json([
+            'status' => true,
+            'message' => 'sukses memasukan data',
+        ], 200);
     }
 
     /**

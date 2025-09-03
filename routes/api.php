@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AboutController;
 use App\Http\Controllers\Api\BeritaController;
 use App\Http\Controllers\Api\KesiswaanController;
+use App\Http\Controllers\Api\PrestasiController;
 use App\Http\Controllers\Api\ProgramKerjaController;
 use App\Http\Controllers\Api\SejarahController;
 use App\Http\Controllers\Api\SlideController;
@@ -40,4 +41,8 @@ Route::apiResource('kesiswaan',
 
 Route::apiResource('sejarah',
     SejarahController::class
+);
+
+Route::apiResource('prestasi',
+    PrestasiController::class
 );

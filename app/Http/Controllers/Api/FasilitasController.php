@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Sejarah;
+use App\Models\Fasilitas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class SejarahController extends Controller
+class FasilitasController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +15,7 @@ class SejarahController extends Controller
     public function index()
     {
         // tampilkan semua data
-        $data = Sejarah::all();
+        $data = Fasilitas::all();
         return response()->json([
             'status' => true,
             'message' => 'data ditemukan',
@@ -29,13 +29,12 @@ class SejarahController extends Controller
     public function store(Request $request)
     {
         // membuat variabel dari model
-        $data = new Sejarah;
+        $data = new Fasilitas;
 
         // ketentuan valuenya
         $rules = [
             'gambar' => 'required|url',
             'judul' => 'required',
-            'deskripsi' => 'required'
         ];
 
         // validator manual jika gagal tambah
@@ -51,7 +50,6 @@ class SejarahController extends Controller
         // validasi tambah data
         $data->gambar = $request->gambar;
         $data->judul = $request->judul;
-        $data->deskripsi = $request->deskripsi;
         $post = $data->save();
 
         // mengvalidasi data sukses
@@ -67,7 +65,7 @@ class SejarahController extends Controller
     public function show(string $id)
     {
         // mencari data dengan id
-        $data = Sejarah::find($id);
+        $data = Fasilitas::find($id);
 
         // if else jika ada dan tidak ada
         if($data) {
@@ -90,7 +88,7 @@ class SejarahController extends Controller
     public function update(Request $request, string $id)
     {
         // mencari data dengan id
-        $data = Sejarah::find($id);
+        $data = Fasilitas::find($id);
 
         // jika id tidak ada
         if(empty($data)) {
@@ -104,7 +102,6 @@ class SejarahController extends Controller
         $rules = [
             'gambar' => 'required|url',
             'judul' => 'required',
-            'deskripsi' => 'required'
         ];
 
         // validator jika gagal
@@ -120,7 +117,6 @@ class SejarahController extends Controller
         // input data
         $data->gambar = $request->gambar;
         $data->judul = $request->judul;
-        $data->deskripsi = $request->deskripsi;
         
         //data di save
         $update = $data->save();
@@ -137,7 +133,7 @@ class SejarahController extends Controller
     public function destroy(string $id)
     {
         // mecari data menggunakan id
-        $data = Sejarah::find($id);
+        $data = Fasilitas::find($id);
 
         // jika data tidak ditemukan
         if (empty($data)) {

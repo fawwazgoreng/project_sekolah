@@ -47,6 +47,18 @@ class PrestasiController extends Controller
                 'data' => $validator->errors(),
             ], 404);
         }
+
+        // validasi tambah data
+        $data->gambar = $request->gambar;
+        $data->judul = $request->judul;
+        $data->deskripsi = $request->deskripsi;
+        $post = $data->save();
+
+        // mengvalidasi data sukses
+        return response()->json([
+            'status' => true,
+            'message' => 'sukses memasukan data',
+        ], 200);
     }
 
     /**
