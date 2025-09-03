@@ -19,6 +19,7 @@ class VisiMisiSeeder extends Seeder
             VisiMisi::create([
                 'visi'      => $faker->sentence(6),
                 'misi'  => $faker->paragraph(5),
+                'moto'      => $faker->sentence(6),
             ]);
         }
     }

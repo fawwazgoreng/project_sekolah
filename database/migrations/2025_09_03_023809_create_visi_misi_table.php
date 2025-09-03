@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->text('visi');
             $table->text('misi');
+            $table->text('moto');
             $table->timestamps();
         });
     }

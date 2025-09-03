@@ -33,9 +33,9 @@ class VisiMisiController extends Controller
 
         // ketentuan valuenya
         $rules = [
-            'gambar' => 'required|url',
-            'judul' => 'required',
-            'deskripsi' => 'Required'
+            'visi' => 'required',
+            'misi' => 'Required',
+            'moto' => 'required'
         ];
 
         // validator manual jika gagal tambah
@@ -51,6 +51,7 @@ class VisiMisiController extends Controller
         // validasi tambah datas
         $data->visi = $request->visi;
         $data->misi = $request->misi;
+        $data->moto = $request->moto;
         $post = $data->save();
 
         // mengvalidasi data sukses
@@ -119,6 +120,7 @@ class VisiMisiController extends Controller
         // input data
         $data->visi = $request->visi;
         $data->misi = $request->misi;
+        $data->moto = $request->moto;
         
         //data di save
         $update = $data->save();
