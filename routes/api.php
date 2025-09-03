@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AboutController;
+use App\Http\Controllers\Api\BeritaController;
 use App\Http\Controllers\Api\SlideController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -15,4 +16,8 @@ Route::apiResource('slide',
 
 Route::apiResource('about',
     AboutController::class
+);
+
+Route::apiResource('berita',
+    BeritaController::class
 );
