@@ -2,12 +2,14 @@
 
 use App\Http\Controllers\Api\AboutController;
 use App\Http\Controllers\Api\BeritaController;
+use App\Http\Controllers\Api\FasilitasController;
 use App\Http\Controllers\Api\KesiswaanController;
 use App\Http\Controllers\Api\PrestasiController;
 use App\Http\Controllers\Api\ProgramKerjaController;
 use App\Http\Controllers\Api\SejarahController;
 use App\Http\Controllers\Api\SlideController;
 use App\Http\Controllers\Api\VisiMisiController;
+use App\Models\Ekstrakulikuler;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -45,4 +47,12 @@ Route::apiResource('sejarah',
 
 Route::apiResource('prestasi',
     PrestasiController::class
+);
+
+Route::apiResource('fasilitas',
+    FasilitasController::class
+);
+
+Route::apiResource('ekstrakulikuler',
+    Ekstrakulikuler::class
 );
