@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\AboutController;
+use App\Http\Controllers\Api\AdminAuthController;
+use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\BeritaController;
 use App\Http\Controllers\Api\EkstrakulikulerController;
 use App\Http\Controllers\Api\FasilitasController;
@@ -56,3 +58,19 @@ Route::apiResource('fasilitas',
 Route::apiResource('ekstra',
     EkstrakulikulerController::class
 );
+
+Route::post('admin/register', [
+    AdminAuthController::class, 'register'
+]);
+Route::post('admin/login', [
+    AdminAuthController::class, 'login'
+]);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('admin/logout', [
+        AdminAuthController::class, 'logout'
+    ]);
+    Route::apiResource('admin', 
+    AdminController::class
+    );
+});
