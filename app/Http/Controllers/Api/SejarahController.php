@@ -5,155 +5,146 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Sejarah;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class SejarahController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Tampilkan semua data
     public function index()
     {
-        // tampilkan semua data
         $data = Sejarah::all();
         return response()->json([
             'status' => true,
-            'message' => 'data ditemukan',
+            'message' => 'Data ditemukan',
             'data' => $data,
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Simpan data baru
     public function store(Request $request)
     {
-        // membuat variabel dari model
-        $data = new Sejarah;
+        $validator = Validator::make($request->all(), [
+            'judul' => 'nullable|string',
+            'deskripsi' => 'nullable|string',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
 
-        // ketentuan valuenya
-        $rules = [
-            'gambar' => 'required|url',
-            'judul' => 'required',
-            'deskripsi' => 'required'
-        ];
-
-        // validator manual jika gagal tambah
-        $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => 'gagal memasukan data',
+                'message' => 'Gagal memasukkan data',
                 'data' => $validator->errors(),
-            ], 404);
+            ], 422);
         }
 
-        // validasi tambah data
-        $data->gambar = $request->gambar;
-        $data->judul = $request->judul;
-        $data->deskripsi = $request->deskripsi;
-        $post = $data->save();
+        $gambarPath = null;
+        if ($request->hasFile('gambar')) {
+            $gambarPath = $request->file('gambar')->store('sejarah', 'public');
+        }
 
-        // mengvalidasi data sukses
+        $data = Sejarah::create([
+            'judul' => $request->judul,
+            'deskripsi' => $request->deskripsi,
+            'gambar' => $gambarPath,
+        ]);
+
         return response()->json([
             'status' => true,
-            'message' => 'sukses memasukan data',
-        ], 200);
+            'message' => 'Sukses memasukkan data',
+            'data' => $data,
+        ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    // Tampilkan data per ID
+    public function show($id)
     {
-        // mencari data dengan id
         $data = Sejarah::find($id);
-
-        // if else jika ada dan tidak ada
-        if($data) {
-            return response()->json([
-                'status' => true,
-                'message' => 'data ditemukan',
-                'data' => $data,
-            ]);
-        }else {
+        if (!$data) {
             return response()->json([
                 'status' => false,
-                'message' => 'data tidak di temukan',
-            ]);
-        }
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        // mencari data dengan id
-        $data = Sejarah::find($id);
-
-        // jika id tidak ada
-        if(empty($data)) {
-            return response()->json([
-                'status' => false,
-                'message' => 'data tidak di temukan',
+                'message' => 'Data tidak ditemukan',
             ], 404);
         }
 
-        // ketentuan value data
-        $rules = [
-            'gambar' => 'required|url',
-            'judul' => 'required',
-            'deskripsi' => 'required'
-        ];
+        return response()->json([
+            'status' => true,
+            'message' => 'Data ditemukan',
+            'data' => $data,
+        ]);
+    }
 
-        // validator jika gagal
-        $validator = validator::make($request->all(), $rules);
+    // Update data
+    public function update(Request $request, $id)
+    {
+        $data = Sejarah::find($id);
+        if (!$data) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Data tidak ditemukan',
+            ], 404);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'judul' => 'nullable|string',
+            'deskripsi' => 'nullable|string',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => 'gagal update data',
+                'message' => 'Gagal update data',
                 'data' => $validator->errors(),
-            ], 404);
+            ], 422);
         }
 
-        // input data
-        $data->gambar = $request->gambar;
-        $data->judul = $request->judul;
-        $data->deskripsi = $request->deskripsi;
-        
-        //data di save
-        $update = $data->save();
+        // Update data teks
+        $data->judul = $request->judul ?? $data->judul;
+        $data->deskripsi = $request->deskripsi ?? $data->deskripsi;
+
+        // Update gambar jika ada
+        if ($request->hasFile('gambar')) {
+            // Hapus gambar lama jika ada
+            if ($data->gambar && Storage::disk('public')->exists($data->gambar)) {
+                Storage::disk('public')->delete($data->gambar);
+            }
+
+            // Simpan gambar baru
+            $gambarPath = $request->file('gambar')->store('sejarah', 'public');
+            $data->gambar = $gambarPath;
+        }
+
+        $data->save();
 
         return response()->json([
             'status' => true,
-            'message' => 'sukses mengupdate data'
-        ], 200);
+            'message' => 'Sukses mengupdate data',
+            'data' => $data,
+        ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    // Hapus data
+    public function destroy($id)
     {
-        // mecari data menggunakan id
         $data = Sejarah::find($id);
-
-        // jika data tidak ditemukan
-        if (empty($data)) {
+        if (!$data) {
             return response()->json([
                 'status' => false,
-                'message' => 'data tidak ditemukan',
+                'message' => 'Data tidak ditemukan',
             ], 404);
         }
 
-        //data di hapus
-        $delete = $data->delete();
+        // Hapus gambar lama jika ada
+        if ($data->gambar && Storage::disk('public')->exists($data->gambar)) {
+            Storage::disk('public')->delete($data->gambar);
+        }
 
-        // validasi jika data berhasil
+        $data->delete();
+
         return response()->json([
             'status' => true,
-            'message', 'sukses menghapus data'        
-        ], 200);
+            'message' => 'Data berhasil dihapus',
+        ]);
     }
 }

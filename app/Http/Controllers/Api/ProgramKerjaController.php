@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\ProgramKerja;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class ProgramKerjaController extends Controller
@@ -34,8 +35,8 @@ class ProgramKerjaController extends Controller
         // ketentuan valuenya
         $rules = [
             'judul' => 'required',
-            'gambar' => 'required|url',
-            'deskripsi' => 'required'
+            'gambar' => 'nullable|url',
+            'deskripsi' => 'nullable'
         ];
 
         // validator manual jika gagal tambah
@@ -50,8 +51,10 @@ class ProgramKerjaController extends Controller
 
         // validasi tambah data
         $data->judul = $request->judul;
-        $data->gambar = $request->gambar;
-        $data->deskripsi = $request->deskripsi;
+        $data->gambar = $request->hasFile('gambar')
+        ? Storage::url($request->file('gambar')->store('ekstrakulikuler', 'public'))
+        : "";
+        $data->deskripsi = "";
         $post = $data->save();
 
         // mengvalidasi data sukses
@@ -87,49 +90,43 @@ class ProgramKerjaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        // mencari data dengan id
-        $data = ProgramKerja::find($id);
-
-        // jika id tidak ada
-        if(empty($data)) {
-            return response()->json([
-                'status' => false,
-                'message' => 'data tidak di temukan',
-            ], 404);
-        }
-
-        // ketentuan value data
-        $rules = [
-            'judul' => 'required',
-            'gambar' => 'required|url',
-            'deskripsi' => 'required'
-        ];
-
-        // validator jika gagal
-        $validator = validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => 'gagal update data',
-                'data' => $validator->errors(),
-            ], 404);
-        }
-
-        // input data
-        $data->judul = $request->judul;
-        $data->gambar = $request->gambar;
-        $data->deskripsi = $request->deskripsi;
-        
-        //data di save
-        $update = $data->save();
-
+public function update(Request $request, string $id)
+{
+    $data = ProgramKerja::find($id);
+    if(!$data) {
         return response()->json([
-            'status' => true,
-            'message' => 'sukses mengupdate data'
-        ], 200);
+            'status' => false,
+            'message' => 'data tidak ditemukan',
+        ], 404);
     }
+
+    $rules = [
+        'judul' => 'required',
+        'gambar' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+        'deskripsi' => 'nullable'
+    ];
+
+    $validator = Validator::make($request->all(), $rules);
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => false,
+            'message' => 'gagal update data',
+            'data' => $validator->errors(),
+        ], 404);
+    }
+
+    $data->judul = $request->judul;
+    $data->gambar = $request->hasFile('gambar')
+        ? Storage::url($request->file('gambar')->store('ekstrakulikuler', 'public'))
+        : $data->gambar; // keep old image if not updated
+    $data->deskripsi = $request->deskripsi ?? $data->deskripsi;
+    $data->save();
+
+    return response()->json([
+        'status' => true,
+        'message' => 'sukses mengupdate data'
+    ], 200);
+}
 
     /**
      * Remove the specified resource from storage.

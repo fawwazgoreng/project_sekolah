@@ -28,34 +28,34 @@ class FasilitasController extends Controller
      */
     public function store(Request $request)
     {
-        // membuat variabel dari model
-        $data = new Fasilitas;
+        $validator = Validator::make($request->all(), [
+            'judul' => 'required|string|max:255',
+            'gambar' => 'required|image|max:2048', // validate file
+        ]);
 
-        // ketentuan valuenya
-        $rules = [
-            'gambar' => 'required|url',
-            'judul' => 'required',
-        ];
-
-        // validator manual jika gagal tambah
-        $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
                 'message' => 'gagal memasukan data',
                 'data' => $validator->errors(),
-            ], 404);
+            ], 422);
         }
 
-        // validasi tambah data
-        $data->gambar = $request->gambar;
-        $data->judul = $request->judul;
-        $post = $data->save();
+        $filePath = null;
+        if ($request->hasFile('gambar')) {
+            // simpan file di storage/app/public/slides
+            $filePath = $request->file('gambar')->store('slides', 'public');
+        }
 
-        // mengvalidasi data sukses
+        $fasilitas = Fasilitas::create([
+            'judul' => $request->judul,
+            'gambar' => $filePath,
+        ]);
+
         return response()->json([
             'status' => true,
             'message' => 'sukses memasukan data',
+            'data' => $fasilitas,
         ], 200);
     }
 
@@ -68,13 +68,13 @@ class FasilitasController extends Controller
         $data = Fasilitas::find($id);
 
         // if else jika ada dan tidak ada
-        if($data) {
+        if ($data) {
             return response()->json([
                 'status' => true,
                 'message' => 'data ditemukan',
                 'data' => $data,
             ]);
-        }else {
+        } else {
             return response()->json([
                 'status' => false,
                 'message' => 'data tidak di temukan',
@@ -85,47 +85,45 @@ class FasilitasController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        // mencari data dengan id
-        $data = Fasilitas::find($id);
-
-        // jika id tidak ada
-        if(empty($data)) {
-            return response()->json([
-                'status' => false,
-                'message' => 'data tidak di temukan',
-            ], 404);
-        }
-
-        // ketentuan value data
-        $rules = [
-            'gambar' => 'required|url',
-            'judul' => 'required',
-        ];
-
-        // validator jika gagal
-        $validator = validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => 'gagal update data',
-                'data' => $validator->errors(),
-            ], 404);
-        }
-
-        // input data
-        $data->gambar = $request->gambar;
-        $data->judul = $request->judul;
-        
-        //data di save
-        $update = $data->save();
-
+public function update(Request $request, string $id)
+{
+    $data = Fasilitas::find($id);
+    if (!$data) {
         return response()->json([
-            'status' => true,
-            'message' => 'sukses mengupdate data'
-        ], 200);
+            'status'  => false,
+            'message' => 'data tidak ditemukan',
+        ], 404);
     }
+
+    $rules = [
+        'gambar' => 'sometimes|file',
+        'judul'  => 'required|string',
+    ];
+    $validator = Validator::make($request->all(), $rules);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'status'  => false,
+            'message' => 'gagal update data',
+            'data'    => $validator->errors(),
+        ], 422);
+    }
+
+    if ($request->hasFile('gambar')) {
+        $file = $request->file('gambar');
+        $path = $file->store('fasilitas', 'public');
+        $data->gambar = $path;
+    }
+
+    $data->judul = $request->judul;
+    $data->save();
+
+    return response()->json([
+        'status'  => true,
+        'message' => 'sukses mengupdate data',
+        'data'    => $data,
+    ], 200);
+}
 
     /**
      * Remove the specified resource from storage.
@@ -149,7 +147,8 @@ class FasilitasController extends Controller
         // validasi jika data berhasil
         return response()->json([
             'status' => true,
-            'message', 'sukses menghapus data'        
+            'message',
+            'sukses menghapus data'
         ], 200);
     }
 }

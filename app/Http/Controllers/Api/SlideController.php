@@ -28,32 +28,26 @@ class SlideController extends Controller
      */
     public function store(Request $request)
     {
-        // membuat variabel dari model
-        $data = new Slide;
+        // Validasi file
+        $request->validate([
+            'file' => 'required|image|max:2048', // max 2MB, image only
+        ]);
 
-        // ketentuan valuenya
-        $rules = ['gambar' => 'required|url'];
+        $file = $request->file('file');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $path = $file->storeAs('slides', $filename, 'public');
 
-        // validator manual jika gagal tambah
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => 'gagal memasukan data',
-                'data' => $validator->errors(),
-            ], 404);
-        }
+        $slide = new Slide();
+        $slide->gambar = '/storage/' . $path; // save path in DB
+        $slide->save();
 
-        // validasi tambah data
-        $data->gambar = $request->gambar;
-        $post = $data->save();
-
-        // mengvalidasi data sukses
         return response()->json([
             'status' => true,
-            'message' => 'sukses memasukan data',
+            'message' => 'File berhasil diupload!',
+            'data' => $slide,
         ], 200);
     }
+
 
     /**
      * Display the specified resource.
@@ -64,13 +58,13 @@ class SlideController extends Controller
         $data = Slide::find($id);
 
         // if else jika ada dan tidak ada
-        if($data) {
+        if ($data) {
             return response()->json([
                 'status' => true,
                 'message' => 'data ditemukan',
                 'data' => $data,
             ]);
-        }else {
+        } else {
             return response()->json([
                 'status' => false,
                 'message' => 'data tidak di temukan',
@@ -87,7 +81,7 @@ class SlideController extends Controller
         $data = Slide::find($id);
 
         // jika id tidak ada
-        if(empty($data)) {
+        if (empty($data)) {
             return response()->json([
                 'status' => false,
                 'message' => 'data tidak di temukan',
@@ -109,7 +103,7 @@ class SlideController extends Controller
 
         // input data
         $data->gambar = $request->gambar;
-        
+
         //data di save
         $update = $data->save();
 
@@ -141,8 +135,8 @@ class SlideController extends Controller
         // validasi jika data berhasil
         return response()->json([
             'status' => true,
-            'message', 'sukses menghapus data'        
+            'message',
+            'sukses menghapus data'
         ], 200);
-
     }
 }

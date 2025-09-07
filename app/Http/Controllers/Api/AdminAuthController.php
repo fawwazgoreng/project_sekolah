@@ -10,35 +10,37 @@ use Illuminate\Support\Facades\Validator;
 
 class AdminAuthController extends Controller
 {
-    public function register(Request $request){
+    public function register(Request $request)
+    {
 
-    $rules = [
-        'username' => 'required|unique:admin,username',
-        'password' => 'required|min:6'
-    ];
+        $rules = [
+            'username' => 'required|unique:admin,username',
+            'password' => 'required|min:6'
+        ];
 
-    $validator = Validator::make($request->all(), $rules);
-    if ($validator->fails()) {
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'gagal register',
+                'data' => $validator->errors()
+            ], 422);
+        }
+
+        $admin = Admin::create([
+            'username' => $request->username,
+            'password' => Hash::make($request->password),
+        ]);
+
         return response()->json([
-            'status' => false,
-            'message' => 'gagal register',
-            'data' => $validator->errors()
-        ], 422);
+            'status' => true,
+            'message' => 'berhasil register',
+            'data'   => $admin
+        ], 201);
     }
 
-    $admin = Admin::create([
-        'username' => $request->username,
-        'password' => Hash::make($request->password),
-    ]);
-
-    return response()->json([
-        'status' => true,
-        'message' => 'berhasil register',
-        'data'   => $admin
-    ], 201);
-    }
-
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         $request->validate([
             'username' => 'required',
             'password' => 'required'
@@ -50,13 +52,17 @@ class AdminAuthController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'username atau password salah'
-            ],401);
+            ], 401);
         }
 
         $token = $admin->createToken('admin-token')->plainTextToken;
         return response()->json([
             'status' => true,
             'message' => 'login berhasil dan dapat token',
+            'admin' => [
+                'id' => $admin->id,
+                'username' => $admin->username
+            ],
             'token' => $token
         ]);
     }
