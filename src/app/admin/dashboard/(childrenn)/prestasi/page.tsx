@@ -1,9 +1,23 @@
 "use client"
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import Image from "next/image";
-import Wkk from "@/public/wkk.jpeg";
+import { PrestasiDelete, PrestasiGet } from "@/app/api/prestasi";
+import { DataAbout } from "@/app/types/types";
 
 export default function PrestasiAdmin() {
+    const [data, setData] = useState<DataAbout[]>([]);
+    useEffect(() => {
+        PrestasiGet().then((res) => setData(res.data)).catch((err) => console.log(err));
+    }, []);
+    function DeletePrestasi(id: number) {
+        PrestasiDelete({ id })
+            .then(() => {
+                window.location.reload();
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    }
     const [preview, setPreview] = useState<string>("");
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -25,8 +39,8 @@ export default function PrestasiAdmin() {
                         onClick={() => setPupUpActiv(false)}
                     >
                         <span className="w-full h-full">
-                        <span className="w-7 h-0.5 rounded-full -right-3 absolute rotate-45 bg-black"></span>
-                        <span className="w-7 h-0.5 rounded-full -right-3 absolute -rotate-45 bg-black"></span>
+                            <span className="w-7 h-0.5 rounded-full -right-3 absolute rotate-45 bg-black"></span>
+                            <span className="w-7 h-0.5 rounded-full -right-3 absolute -rotate-45 bg-black"></span>
                         </span>
                     </button>
                     <label htmlFor="nama" className="mt-4">nama</label>
@@ -53,8 +67,8 @@ export default function PrestasiAdmin() {
                         onClick={() => setPupEditUpActiv(false)}
                     >
                         <span className="w-full h-full">
-                        <span className="w-7 h-0.5 rounded-full -right-3 absolute rotate-45 bg-black"></span>
-                        <span className="w-7 h-0.5 rounded-full -right-3 absolute -rotate-45 bg-black"></span>
+                            <span className="w-7 h-0.5 rounded-full -right-3 absolute rotate-45 bg-black"></span>
+                            <span className="w-7 h-0.5 rounded-full -right-3 absolute -rotate-45 bg-black"></span>
                         </span>
                     </button>
                     <label htmlFor="nama" className="mt-4">nama</label>
@@ -78,18 +92,21 @@ export default function PrestasiAdmin() {
                 <h1 className="text-hijau text-4xl font-bold">Prestasi</h1>
                 <button onClick={() => setPupUpActiv(true)} className="px-4 flex items-center  py-3 w-[100px] h-10 bg-blue-600 text-white rounded">Tambah</button>
                 <div className="mt-5 w-full flex flex-wrap justify-between gap-y-6">
-                    <div className="w-full lg:w-[48%] xl:w-[32%]  min-h-96 shadow-lg rounded-md overflow-hidden">
-                        <span className="w-full h-48 overflow-hidden inline-block">
-                            <Image src={Wkk} alt="" width={800} height={800} className=" w-full h-full object-center object-cover"></Image>
-                        </span>
-                        <h1 className=" w-11/12 flex mx-auto text-xl font-bold mt-2">Lorem ipsum dolor sit amet.</h1>
-                        <p className="w-11/12 flex mx-auto text-wrap overflow-hidden mt-2 text-ellipsis">Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                            Officia et dolore cupiditate Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita, fuga. Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab, nostrum. assumenda explicabo minima obcaecati odit quas quibusdam recusandae.</p>
-                        <span className="w-11/12 flex mx-auto justify-end gap-5 p-2 items-center">
-                            <button onClick={() => setPupEditUpActiv(true)} className="py-2 px-4 bg-blue-600 rounded-md w-20 text-white font-bold">Edit</button>
-                            <button className="py-2 px-4 bg-red-600 rounded-md w-20 text-white font-bold">Hapus</button>
-                        </span>
-                    </div>
+                    {data.map((res) => {
+                        return (
+                            <div key={res.id} className="w-full lg:w-[48%] xl:w-[32%]  min-h-96 shadow-lg rounded-md overflow-hidden">
+                                <span className="w-full h-48 overflow-hidden inline-block">
+                                    <Image src={`${process.env.NEXT_PUBLIC_BASEURL}/prestasi/${res.gambar}`} alt="" width={800} height={800} className=" w-full h-full object-center object-cover"></Image>
+                                </span>
+                                <h1 className=" w-11/12 flex mx-auto text-xl font-bold mt-2">{res.judul}</h1>
+                                <p className="w-11/12 flex mx-auto text-wrap overflow-hidden mt-2 text-ellipsis">{res.deskripsi}</p>
+                                <span className="w-11/12 flex mx-auto justify-end gap-5 p-2 items-center">
+                                    <button onClick={() => setPupEditUpActiv(true)} className="py-2 px-4 bg-blue-600 rounded-md w-20 text-white font-bold">Edit</button>
+                                    <button onClick={() => DeletePrestasi(res.id)} className="py-2 px-4 bg-red-600 rounded-md w-20 text-white font-bold">Hapus</button>
+                                </span>
+                            </div>
+                        )
+                    })}
                 </div>
             </div>
         </>

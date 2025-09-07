@@ -8,21 +8,19 @@ export const UploadPage = () => {
   const handleButtonClick = () => {
     fileInputRef.current?.click(); // trigger file input
   };
-
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-
     const formData = new FormData();
     formData.append('file', file);
-
     try {
-      const res = await fetch(`/api/upload`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/slide`, {
         method: 'POST',
         body: formData,
       });
       if (res.ok) {
         alert('File berhasil diupload!');
+        window.location.reload();
       } else {
         alert('Upload gagal.');
       }

@@ -26,7 +26,7 @@ export default function AddMadingAdmin() {
         </span>
         <span className="flex gap-2 flex-col">
           <label className="text-2xl font-bold" htmlFor="desc">Description</label>
-          <textarea name="desc" id="desc" className="border-none outline-none border-slate-500 outline-slate-500 w-full min-h-96 p-2 bg-slate-100" defaultValue={`
+          <textarea name="desc" id="desc" className=" resize-none border-none outline-none border-slate-500 outline-slate-500 w-full min-h-96 p-2 bg-slate-100" defaultValue={`
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis vero incidunt rem iste molestias ducimus aliquam quam necessitatibus porro sint minima quasi unde culpa nihil neque odio possimus, alias fugit laudantium eos, doloribus eius mollitia. Dolore repudiandae tempora est laudantium illo, odio obcaecati quidem fugiat consectetur enim eos numquam magnam molestias possimus quos sit maxime culpa unde fugit sint recusandae harum quod! Reiciendis voluptates quod aut error libero, tempore molestiae exercitationem nisi ea unde ipsum cupiditate pariatur, natus eveniet repellat commodi blanditiis hic, modi dignissimos quaerat mollitia amet! Accusamus beatae veritatis incidunt recusandae consectetur ex minima numquam dolore veniam in?
                     `}>
           </textarea>

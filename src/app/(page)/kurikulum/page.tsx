@@ -28,7 +28,7 @@ export default function Kurikulum() {
                     <li>Simulasi Digital</li>
                 </ul>
             </div> 
-                <p className="text-[#00978F] font-bold text-[18px] md:text-[24px] mt-[15px]">2. Mata Pelajaran Kejuruan (Produktif)</p>
+                {/* <p className="text-[#00978F] font-bold text-[18px] md:text-[24px] mt-[15px]">2. Mata Pelajaran Kejuruan (Produktif)</p>
                 <div className="mt-[10px]">
                     <p className="md:text-[20px] text-[15px] font-bold mt-[5px]">A. Jurusan Rekayasa Perangkat Lunak (RPL)</p>
                     <ul className="ml-4 list-outside list-disc  w-75 m text-[12px] md:text-[15px]l-4 mt-[5px]">
@@ -64,7 +64,7 @@ export default function Kurikulum() {
                     <li >Perancangan jaringan komputer (TKJ).</li>
                 </ul>
                 </div>
-                </div>
+                </div> */}
         </div>
         </>
     )

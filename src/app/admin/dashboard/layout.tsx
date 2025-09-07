@@ -1,5 +1,6 @@
 "use client";
 import "../../globals.css";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Poppins } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import NavBarAdmin from "@/app/component/navAdmin";
@@ -7,10 +8,6 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-const poppins = Poppins({
-    subsets: ["latin"],
-    weight: "400",
-});
 
 export default function RootLayout({
     children,
@@ -23,10 +20,10 @@ export default function RootLayout({
       useEffect(() => {
         if (status === "unauthenticated") {
           router.push("/admin")
-        }
+        };
       }, [router, status]);
     return (
-            <div className={`${poppins.className} antialiased capitalize bg-second`}>
+            <div className={` antialiased capitalize bg-second`}>
                 <SessionProvider>
                     <div className="flex md:flex-row flex-col h-screen overflow-hidden bg-second">
                         {/* Sidebar */}

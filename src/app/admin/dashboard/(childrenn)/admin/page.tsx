@@ -1,7 +1,11 @@
 "use client"
 import Image from "next/image";
 import Account from "@/public/account.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Admin } from "@/app/types/types";
+import { AdminGet } from "@/app/api/admin";
+import { KesiswaanDelete } from "@/app/api/kesiswaan";
+import { useSession } from "next-auth/react";
 
 export default function AdminAdmin() {
     // const [preview, setPreview] = useState<string>("");
@@ -12,9 +16,26 @@ export default function AdminAdmin() {
     //         setPreview(url);
     //     }
     // };
+  const { data: session } = useSession();
+  const [data, setData] = useState<Admin[]>([]);
+  useEffect(() => {
+    if (!session?.user.accessToken) return;
+    AdminGet(session.user.accessToken)
+      .then((res) => setData(res.data))
+      .catch((err) => console.error(err));
+  }, [session]);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    function DeleteAdmin (id:string) {
+        KesiswaanDelete({id})
+        .then(() => {
+            window.location.reload()
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    }
     const [pupUpActiv, setPupUpActiv] = useState(false);
     const [pupUpEditActiv, setPupUpEditActiv] = useState(false);
-    console.log(pupUpActiv);
     function PopUp() {
         return (
             <div className="w-full h-full z-10">
@@ -58,7 +79,10 @@ export default function AdminAdmin() {
                     <input type="text" id="nama" name="nama" className="w-full bg-slate-300  border-none outline-none rounded-md p-2" />
                     <label htmlFor="password" className="mt-4">password</label>
                     <input type="text" id="password" name="password" className="w-full h-10 bg-slate-300  border-none outline-none rounded-md p-2" />
-                    <button className="text-white mt-10 cursor-pointer w-48 rounded-xl px-3 py-2 text-xl font-bold bg-blue-600 text-center">Submit</button>
+                    <span className="flex gap-4">
+                    <button className="text-white mt-10 cursor-pointer w-48 rounded-xl px-3 py-2 text-xl font-bold bg-blue-600 text-center">Edit</button>
+                    <button className="text-white mt-10 cursor-pointer w-48 rounded-xl px-3 py-2 text-xl font-bold bg-blue-600 text-center">Delete</button>
+                    </span>
                 </div>
             </>
         )
@@ -71,10 +95,10 @@ export default function AdminAdmin() {
                 <h1 className="text-hijau text-4xl font-bold">Admin</h1>
                 <button onClick={() => setPupUpActiv(!pupUpActiv)} className="px-4 flex items-center  py-3 w-[100px] h-10 bg-blue-600 text-white rounded">Tambah</button>
                 <div className="w-full min-h-10 flex flex-wrap gap-y-5 items-center gap-2 xl:gap-3 justify-center">
-                    {[4, 4, 53, 3, 1, 3].map((item, loop) => (
+                    {data.map((item, loop) => (
                         <button onClick={() => setPupUpEditActiv(true)} key={loop} className="overflow-hidden pr-2 text-ellipsis flex min-w-40 w-[48%] lg:w-[322%] xl:w-[24%] h-14 rounded-lg items-center text-lg bg-sky-100">
                             <Image className="h-14 w-14 object-cover object-center" src={Account} width={800} height={800} alt=""></Image>
-                            <p className="max-w-1/2 overflow-hidden text-ellipsis">Admin12dsadasdasd3</p>
+                            <p className="max-w-1/2 overflow-hidden text-ellipsis">{item.username}</p>
                         </button>
                     ))}
                 </div>

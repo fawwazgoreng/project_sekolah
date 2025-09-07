@@ -17,56 +17,43 @@ const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const { username, password } = credentials as {
-          username: string;
-          password: string;
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/admin/login`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              username: credentials?.username,
+              password: credentials?.password,
+            }),
+          }
+        );
+        if (!res.ok) return null;
+        const data = await res.json();
+        return {
+          id: data.admin.id,
+          username: data.admin.username,
+          accessToken: data.token,
         };
-        const user: any = {
-          id: 1,
-          username: "test",
-          password: "test",
-          role: "admin",
-        };
-        if (username === "test" && password === "test") {
-          return user;
-        } else {
-          return null;
-        }
-        // try {
-        //   const res = await fetch(`${process.env.NEXTBASEURL}`, {
-        //     method: "POST",
-        //     headers: { "Content-Type": "application/json" },
-        //     body: JSON.stringify({
-        //       username: credentials?.username,
-        //       password: credentials?.password,
-        //     }),
-        //   });
-        //   if (!res.ok) return null;
-        //   const data = await res.json();
-        //   return {
-        //     id: data.id,
-        //     username: data.username,
-        //   };
-        // } catch (e) {
-        //   console.error("Authorize error:", e);
-        //   return null;
-        // }
       },
     }),
   ],
   callbacks: {
-    async jwt({ token, account, user }) {
+    async jwt({ token, user, account }) {
       if (account?.provider === "credentials" && user) {
         token.id = user.id;
         token.username = user.username;
+        token.accessToken = user.accessToken; // now it exists
       }
       return token;
     },
+
     async session({ session, token }) {
       if ("username" in token) {
         session.user = {
           id: token.id,
           username: token.username,
+          accessToken: token.accessToken, // now it exists
         };
       }
       return session;

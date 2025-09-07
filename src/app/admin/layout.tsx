@@ -4,6 +4,7 @@ import { Poppins } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const poppins = Poppins({
     subsets: ["latin"],
     weight: "400",
@@ -17,7 +18,7 @@ export default function RootLayout({
     return (
         <html lang="en" className=" scroll-smooth" data-scroll-behavior="smooth">
             <body
-                className={`${poppins.className} antialiased capitalize`}
+                className={` antialiased capitalize`}
             >
                 <SessionProvider>
                     {children}

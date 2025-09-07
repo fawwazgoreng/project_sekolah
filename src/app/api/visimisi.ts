@@ -1,36 +1,32 @@
+// src/app/api/visimisi.ts
 
 export async function VisimisiGet() {
-    const response = await fetch(`${process.env.NEXTBASEURL}` , {
-        method: "get",
-        headers: {
-            "Content-type":"apllication/json"
-        },
-    }).then(item => item.json());
-    return response;
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/visimisi`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        const data = await response.json();
+        return data; 
+    } catch (err) {
+        console.error("VisimisiGet error:", err);
+        return { status: false, data: null, message: "Failed to fetch Visi Misi" };
+    }
 }
 
-export async function VisimisiAdd(props:{title:string ; desc: string;}) {
-    const response = await fetch(`${process.env.NEXTBASEURL}` , {
-        method: "post",
-        headers: {
-            "Content-type":"apllication/json"
-        },
-        body: JSON.stringify({
-            title:props.title,
-            desc:props.desc,
-        })
-    }).then(item => item.json());
-    return response;
+export async function VisimisiEdit(payload: {
+  id: number;
+  visi: string;
+  misi: string;
+  moto: string;
+}) {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/visimisi/${payload.id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  }).then((res) => res.json());
+  return response;
 }
-export async function VisimisiDelete(props:{id: number;}) {
-    const response = await fetch(`${process.env.NEXTBASEURL}` , {
-        method: "post",
-        headers: {
-            "Content-type":"apllication/json"
-        },
-        body: JSON.stringify({
-            id:props.id
-        })
-    }).then(item => item.json());
-    return response;
-}
+

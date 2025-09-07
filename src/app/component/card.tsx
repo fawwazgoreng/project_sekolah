@@ -1,24 +1,39 @@
 "use client"
 // import dynamic from "next/dynamic";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import { CSSProperties } from "react";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import Image from "next/image";
-import Wkk from "@/public/wkk.jpeg";
-import WikramaONO from "@/public/WikramaOFO.png"
+import { SlideGet } from "../api/slide";
 
 // const Szlider = dynamic(() => import("react-slick"), {
 //   ssr: false, // disable SSR untuk komponen ini
 // });
 
-type Props = {
+
+    type DataItem = {
+  id: number;
+  gambar: string;
+  created_at: string | null;
+  updated_at: string | null;
+};
+
+
+interface Props {
     Arrow: boolean;
 }
 
 export const Card: React.FC<Props> = ({ Arrow }) => {
+     const [data, setDataitem] = useState<DataItem[]>([]);
+
+  useEffect(() => {
+    SlideGet()
+      .then((res) => setDataitem(res.data))
+      .catch((err) => console.log(err));
+  }, []);
     const settings = {
         infinite: true,
         speed: 2000,
@@ -33,21 +48,19 @@ export const Card: React.FC<Props> = ({ Arrow }) => {
         nextArrow: <CustomArrow direction="right" Arrow={Arrow} />,
         prevArrow: <CustomArrow direction="left" Arrow={Arrow} />,
     };
+
     return (
         <>
             <Slider {...settings} className="w-full overflow-hidden">
-                <div className="w-full lg:h-[550px] h-64 sm:h-96 overflow-hidden">
-                    {/* <div className="w-full lg:h-[550px] h-64 sm:h-96 overflow-hidden bg-black absolute z-10 opacity-20"></div> */}
-                    <Image className=" w-full h-full  infiniteScales relative object-cover object-center " src={WikramaONO} alt="" width={2000} height={2000}></Image>
-                </div>
-                <div className="w-full lg:h-[550px] h-64 sm:h-96 overflow-hidden">
-                    {/* <div className="w-full lg:h-[550px] h-64 sm:h-96 overflow-hidden bg-black absolute z-10 opacity-20"></div> */}
-                    <Image className="w-full h-full  infiniteScales relative object-cover object-center " src={Wkk} alt="" width={2000} height={2000}></Image>
-                </div>
-                <div className="w-full lg:h-[550px] h-64 sm:h-96 overflow-hidden">
-                    {/* <div className="w-full lg:h-[550px] h-64 sm:h-96 overflow-hidden bg-black absolute z-10 opacity-10"></div> */}
-                    <Image className="w-full h-full  infiniteScales relative object-cover object-center " src={WikramaONO} alt="" width={2000} height={2000}></Image>
-                </div>
+                <div className="w-full lg:h-[550px] h-64 sm:h-96 overflow-hidden"></div>
+                {data.map((res, loop) => {
+                    return (
+                        <div key={loop + 1} className="w-full lg:h-[550px] h-64 sm:h-96 overflow-hidden">
+                        <div className="w-full lg:h-[550px] h-64 sm:h-96 overflow-hidden bg-black absolute z-10 opacity-10"></div>
+                        <Image className="w-full h-full  infiniteScales relative object-cover object-center " src={`${process.env.NEXT_PUBLIC_BASEURL}/${res.gambar}`} alt={`${res.gambar}`} width={2000} height={2000}></Image>
+                    </div>
+                    )
+})}
             </Slider>
         </>
     );

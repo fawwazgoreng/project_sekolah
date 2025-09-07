@@ -1,41 +1,48 @@
 
 export async function BeritaGet() {
-    const response = await fetch(`${process.env.NEXTBASEURL}` , {
-        method: "get",
-        headers: {
-            "Content-type":"apllication/json"
-        },
-    }).then(item => item.json());
-    return response;
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/berita`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+  return await res.json();
 }
 
-export async function BeritaAdd(props:{title: string; picture: File ; desc: string;}) {
-    try {
-        const response = await fetch(`${process.env.NEXTBASEURL}` , {
-            method: "post",
-            headers: {
-                "Content-type":"apllication/json"
-            },
-            body: JSON.stringify({
-                title:props.title,
-                desc:props.desc,
-                picture:props.picture,
-            })
-        }).then(item => item.json());
-        return response;
-    } catch (err) {
-        console.log(err);
-    }
+export async function BeritaGetId(id: string) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/berita/${id}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+  return await res.json();
 }
-export async function BeritaDelete(props:{id: number;}) {
-    const response = await fetch(`${process.env.NEXTBASEURL}` , {
-        method: "post",
-        headers: {
-            "Content-type":"apllication/json"
-        },
-        body: JSON.stringify({
-            id:props.id
-        })
-    }).then(item => item.json());
-    return response;
+
+export async function BeritaAdd(props: { judul: string; deskripsi: string; tanggal: string; gambar: File }) {
+  const formData = new FormData();
+  formData.append("judul", props.judul);
+  formData.append("deskripsi", props.deskripsi);
+  formData.append("tanggal", props.tanggal);
+  formData.append("gambar", props.gambar);
+
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/berita`, {
+      method: "POST",
+      body: formData,
+    });
+    return await res.json();
+  } catch (err) {
+    console.error(err);
+    return { status: false, message: "Gagal menambahkan berita" };
+  }
+}
+
+export async function BeritaDelete(id: number) {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/berita/${id}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    });
+    return await res.json();
+  } catch (err) {
+    console.error(err);
+    return { status: false, message: "Gagal menghapus berita" };
+  }
 }

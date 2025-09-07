@@ -2,6 +2,7 @@
   "name": "web_sekolah",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -14,6 +15,7 @@
     "next-auth": "^4.24.11",
     "react": "^18",
     "react-dom": "^18",
+    "react-icons": "^5.5.0",
     "react-slick": "^0.31.0",
     "slick-carousel": "^1.8.1"
   },

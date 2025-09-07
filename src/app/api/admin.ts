@@ -1,19 +1,25 @@
+export async function AdminGet(token: string) {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/admin`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+  });
 
-export async function AdminGet() {
-    const response = await fetch(`${process.env.NEXTBASEURL}` , {
-        method: "get",
-        headers: {
-            "Content-type":"apllication/json"
-        },
-    }).then(item => item.json());
-    return response;
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`Error ${response.status}: ${text}`);
+  }
+
+  return response.json();
 }
 
 export async function AdminAdd(props:{username: string; password: string;}) {
-    const response = await fetch(`${process.env.NEXTBASEURL}` , {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/admin` , {
         method: "post",
         headers: {
-            "Content-type":"apllication/json"
+            "Content-type":"application/json"
         },
         body: JSON.stringify({
             username:props.username,
@@ -23,10 +29,10 @@ export async function AdminAdd(props:{username: string; password: string;}) {
     return response;
 }
 export async function AdminDelete(props:{id: number;}) {
-    const response = await fetch(`${process.env.NEXTBASEURL}` , {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/admin` , {
         method: "post",
         headers: {
-            "Content-type":"apllication/json"
+            "Content-type":"application/json"
         },
         body: JSON.stringify({
             id:props.id

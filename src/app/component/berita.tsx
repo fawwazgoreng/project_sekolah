@@ -5,16 +5,21 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 // import "../berita.css";
 import { CSSProperties } from "react";
-import { ChevronRight, ChevronLeft } from "lucide-react";
+import { ChevronRight, ChevronLeft} from "lucide-react";
 import Image from "next/image";
-import Wkk from "@/public/wkk.jpeg";
 import { useState, useEffect } from "react";
+import { DataAbout } from "../types/types";
+import { BeritaGet } from "../api/berita";
+import Link from "next/link";
 
 export default function Berita() {
     const [mounted, setMounted] = useState(false);
+    const [beritaGet, setBeritaGet] = useState<DataAbout[]>([]);
     const [initialSlide, setInitialSlide] = useState(0);
+    console.log(beritaGet);
     useEffect(() => {
         setMounted(true);
+        BeritaGet().then((res) => setBeritaGet(res.data)).catch((err) => console.log(err))
         if (window.innerWidth < 640) {
             setInitialSlide(1);
         } else if (window.innerWidth < 1024) {
@@ -59,42 +64,17 @@ export default function Berita() {
     return (
         <div className="w-full container flex items-center justify-center mx-auto">
             <Slider {...settings} className="lg:w-11/12 w-11/12 flex mx-auto self-center justify-around overflow-hidden mt-40 berita-slick">
-                <div className="w-full h-[470px] group rounded-sm bg-white shadow-lg overflow-hidden flex flex-col flex-wrap">
-                    <Image className="w-full h-56 relative object-cover object-center " src={Wkk} alt="" width={2000} height={2000}></Image>
-                    <span className="mt-4 w-11/12 flex flex-col mx-auto">
-                        <p className="font-extralight text-[17px]">Berita</p>
-                        <h2 className="text-ellipsis overflow-clip text-nowrap text-[20px] font-extrabold h-8 ">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sed velit nemo consectetur facere impedit enim at quisquam eius eum assumenda.</h2>
-                        <p className="h-[110px] mt-1 group-hover:text-blue-500 duration-300 text-[18px] overflow-hidden text-ellipsis">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque sint perferendis vitae corporis quia voluptatibus! Atque iure quam perspiciatis voluptas officiis sed animi praesentium nulla esse ex molestiae, minus laboriosam porro quos voluptatum? Doloremque deleniti laboriosam sunt labore eum dolor, numquam laudantium, iste esse quisquam praesentium totam? Doloremque similique sapiente et! Aliquam, accusamus et! Animi, dolorum assumenda sint veniam molestiae enim. Fuga nihil minima ipsam facilis sit ab perspiciatis placeat rem at voluptatem fugit ut explicabo dolor iusto inventore dolores quaerat necessitatibus sunt quos, molestias perferendis animi. Tempora explicabo sint eaque, blanditiis quod quo eius modi iure, iste praesentium dolore!</p>
-                        <p className="mt-3 text-[18px] overflow-hidden h-7 text-ellipsis font-bold">20/20/20</p>
-                    </span>
-                </div>
-                <div className="w-full h-[470px] group rounded-sm bg-white shadow-lg  overflow-hidden flex flex-col flex-wrap">
-                    <Image className="w-full h-56 relative object-cover object-center " src={Wkk} alt="" width={2000} height={2000}></Image>
-                    <span className="mt-4 w-11/12 flex flex-col mx-auto">
-                        <p className="font-extralight text-[17px]">Berita</p>
-                        <h2 className="text-ellipsis overflow-clip text-nowrap text-[20px] font-extrabold h-8 ">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sed velit nemo consectetur facere impedit enim at quisquam eius eum assumenda.</h2>
-                        <p className="h-[110px] mt-1 group-hover:text-blue-500 duration-300 text-[18px] overflow-hidden text-ellipsis">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque sint perferendis vitae corporis quia voluptatibus! Atque iure quam perspiciatis voluptas officiis sed animi praesentium nulla esse ex molestiae, minus laboriosam porro quos voluptatum? Doloremque deleniti laboriosam sunt labore eum dolor, numquam laudantium, iste esse quisquam praesentium totam? Doloremque similique sapiente et! Aliquam, accusamus et! Animi, dolorum assumenda sint veniam molestiae enim. Fuga nihil minima ipsam facilis sit ab perspiciatis placeat rem at voluptatem fugit ut explicabo dolor iusto inventore dolores quaerat necessitatibus sunt quos, molestias perferendis animi. Tempora explicabo sint eaque, blanditiis quod quo eius modi iure, iste praesentium dolore!</p>
-                        <p className="mt-3 text-[18px] overflow-hidden h-7 text-ellipsis font-bold">20/20/20</p>
-                    </span>
-                </div>
-                <div className="w-full h-[470px] group rounded-sm bg-white shadow-lg overflow-hidden flex flex-col flex-wrap">
-                    <Image className="w-full h-56 relative object-cover object-center " src={Wkk} alt="" width={2000} height={2000}></Image>
-                    <span className="mt-4 w-11/12 flex flex-col mx-auto">
-                        <p className="font-extralight text-[17px]">Berita</p>
-                        <h2 className="text-ellipsis overflow-clip text-nowrap text-[20px] font-extrabold h-8 ">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sed velit nemo consectetur facere impedit enim at quisquam eius eum assumenda.</h2>
-                        <p className="h-[110px] mt-1 group-hover:text-blue-500 duration-300 text-[18px] overflow-hidden text-ellipsis">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque sint perferendis vitae corporis quia voluptatibus! Atque iure quam perspiciatis voluptas officiis sed animi praesentium nulla esse ex molestiae, minus laboriosam porro quos voluptatum? Doloremque deleniti laboriosam sunt labore eum dolor, numquam laudantium, iste esse quisquam praesentium totam? Doloremque similique sapiente et! Aliquam, accusamus et! Animi, dolorum assumenda sint veniam molestiae enim. Fuga nihil minima ipsam facilis sit ab perspiciatis placeat rem at voluptatem fugit ut explicabo dolor iusto inventore dolores quaerat necessitatibus sunt quos, molestias perferendis animi. Tempora explicabo sint eaque, blanditiis quod quo eius modi iure, iste praesentium dolore!</p>
-                        <p className="mt-3 text-[18px] overflow-hidden h-7 text-ellipsis font-bold">20/20/20</p>
-                    </span>
-                </div>
-                <div className="w-full h-[470px] group rounded-sm bg-white shadow-lg  overflow-hidden flex flex-col flex-wrap">
-                    <Image className="w-full h-56 relative object-cover object-center " src={Wkk} alt="" width={2000} height={2000}></Image>
-                    <span className="mt-4 w-11/12 flex flex-col mx-auto">
-                        <p className="font-extralight text-[17px]">Berita</p>
-                        <h2 className="text-ellipsis overflow-clip text-nowrap text-[20px] font-extrabold h-8 ">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sed velit nemo consectetur facere impedit enim at quisquam eius eum assumenda.</h2>
-                        <p className="h-[110px] mt-1 group-hover:text-blue-500 duration-300 text-[18px] overflow-hidden text-ellipsis">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque sint perferendis vitae corporis quia voluptatibus! Atque iure quam perspiciatis voluptas officiis sed animi praesentium nulla esse ex molestiae, minus laboriosam porro quos voluptatum? Doloremque deleniti laboriosam sunt labore eum dolor, numquam laudantium, iste esse quisquam praesentium totam? Doloremque similique sapiente et! Aliquam, accusamus et! Animi, dolorum assumenda sint veniam molestiae enim. Fuga nihil minima ipsam facilis sit ab perspiciatis placeat rem at voluptatem fugit ut explicabo dolor iusto inventore dolores quaerat necessitatibus sunt quos, molestias perferendis animi. Tempora explicabo sint eaque, blanditiis quod quo eius modi iure, iste praesentium dolore!</p>
-                        <p className="mt-3 text-[18px] overflow-hidden h-7 text-ellipsis font-bold">20/20/20</p>
-                    </span>
-                </div>
+                {beritaGet.map((res) => (
+                    <Link href={`/berita/${res.id}`} key={res.id} className="w-full h-[470px] group rounded-sm bg-white shadow-lg overflow-hidden flex flex-col flex-wrap">
+                        <Image className="w-full h-56 relative object-cover object-center " src={`${process.env.NEXT_PUBLIC_BASEURL}/${res.gambar}`} alt={res.gambar} width={2000} height={2000}></Image>
+                        <span className="mt-4 w-11/12 flex flex-col mx-auto">
+                            <p className="font-extralight text-[17px]">Berita</p>
+                            <h2 className="text-ellipsis overflow-clip text-nowrap text-[20px] font-extrabold h-8 ">{res.judul}</h2>
+                            <p className="h-[110px] mt-1 group-hover:text-blue-500 duration-300 text-[18px] overflow-hidden text-ellipsis">{res.deskripsi}</p>
+                            <p className="mt-3 text-[18px] overflow-hidden h-7 text-ellipsis font-bold">{res.created_at?.split('T')[0]}</p>
+                        </span>
+                    </Link>
+                ))}
             </Slider>
         </div>
     );
