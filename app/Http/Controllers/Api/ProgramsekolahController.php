@@ -3,19 +3,20 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Prestasi;
+use App\Models\programsekolah;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
-class PrestasiController extends Controller
+class ProgramSekolahController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $data = Prestasi::all();
+        // tampilkan semua data
+        $data = programsekolah::all();
         return response()->json([
             'status' => true,
             'message' => 'data ditemukan',
@@ -23,17 +24,16 @@ class PrestasiController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $rules = [
-            'judul' => 'required|string|max:255',
-            'deskripsi' => 'required|string',
-            'gambar' => 'required|image|mimes:jpg,jpeg,png|max:2048',
-        ];
+        $data = new programsekolah();
 
+        // ketentuan valuenya
+        $rules = [
+            'judul' => 'required',
+            'gambar' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'deskripsi' => 'nullable'
+        ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return response()->json([
@@ -43,8 +43,8 @@ class PrestasiController extends Controller
             ], 422);
         }
 
-        $path = $request->file('gambar')->store('prestasi', 'public');
-        $prestasi = Prestasi::create([
+        $path = $request->file('gambar')->store('programsekolah', 'public');
+        $prestasi = programsekolah::create([
             'judul' => $request->judul,
             'deskripsi' => $request->deskripsi,
             'gambar' => basename($path),
@@ -57,89 +57,84 @@ class PrestasiController extends Controller
         ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        $data = Prestasi::find($id);
-
+        // mencari data dengan id
+        $data = programsekolah::find($id);
+        // if else jika ada dan tidak ada
         if ($data) {
             return response()->json([
                 'status' => true,
                 'message' => 'data ditemukan',
                 'data' => $data,
             ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'data tidak di temukan',
+            ]);
         }
-
-        return response()->json([
-            'status' => false,
-            'message' => 'data tidak ditemukan',
-        ], 404);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
-        $data = Prestasi::find($id);
+        $data = programsekolah::find($id);
         if (!$data) {
             return response()->json([
                 'status' => false,
                 'message' => 'data tidak ditemukan',
             ], 404);
         }
+
         $rules = [
-            'judul' => 'required|string|max:255',
-            'deskripsi' => 'required|string',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'judul' => 'required',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'deskripsi' => 'nullable'
         ];
+
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
                 'message' => 'gagal update data',
                 'data' => $validator->errors(),
-            ], 422);
+            ], 404);
         }
+
+        $data->judul = $request->judul;
         if ($request->hasFile('gambar')) {
-            if ($data->gambar && Storage::disk('public')->exists('prestasi/' . $data->gambar)) {
-                Storage::disk('public')->delete('prestasi/' . $data->gambar);
+            if ($data->gambar && Storage::disk('public')->exists('programsekolah/' . $data->gambar)) {
+                Storage::disk('public')->delete('programsekolah/' . $data->gambar);
             }
-            $path = $request->file('gambar')->store('prestasi', 'public');
+            $path = $request->file('gambar')->store('programsekolah', 'public');
             $data->gambar = basename($path);
         }
-        $data->judul = $request->judul;
-        $data->deskripsi = $request->deskripsi;
+        $data->deskripsi = $request->deskripsi ?? $data->deskripsi;
         $data->save();
+
         return response()->json([
             'status' => true,
-            'message' => 'sukses mengupdate data',
-            'data' => $data,
+            'message' => 'sukses mengupdate data'
         ], 200);
     }
 
     public function destroy(string $id)
     {
-        $data = Prestasi::find($id);
-
-        if (!$data) {
+        // mecari data menggunakan id
+        $data = programsekolah::find($id);
+        // jika data tidak ditemukan
+        if (empty($data)) {
             return response()->json([
                 'status' => false,
                 'message' => 'data tidak ditemukan',
             ], 404);
         }
 
-        if ($data->gambar && Storage::disk('public')->exists('prestasi/' . $data->gambar)) {
-            Storage::disk('public')->delete('prestasi/' . $data->gambar);
-        }
-
-        $data->delete();
-
+        $delete = $data->delete();
         return response()->json([
             'status' => true,
-            'message' => 'sukses menghapus data',
+            'message',
+            'sukses menghapus data'
         ], 200);
     }
 }

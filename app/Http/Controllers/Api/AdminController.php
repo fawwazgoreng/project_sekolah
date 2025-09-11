@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
@@ -45,7 +44,7 @@ class AdminController extends Controller
 
     $admin = Admin::create([
         'username' => $request->username,
-        'password' => Hash::make($request->password),
+        'password' => $request->password
     ]);
 
     return response()->json([
@@ -103,14 +102,12 @@ class AdminController extends Controller
         ], 422);
     }
 
-    $data = $request->only('username', 'password');
-    if (!empty($data['password'])) {
-        $data['password'] = Hash::make($data['password']);
-    } else {
-        unset($data['password']);
-    }
-
-    $admin->update($data);
+    // input data
+        $admin->username = $request->username;
+        $admin->password = $request->password;
+        
+    //data di save
+        $update = $admin->save();
 
     return response()->json([
         'status' => true,
@@ -119,9 +116,6 @@ class AdminController extends Controller
     ], 200);
 }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Admin $admin)
     {
         $admin->delete();

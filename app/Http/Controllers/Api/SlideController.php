@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Slide;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class SlideController extends Controller
@@ -30,23 +31,19 @@ class SlideController extends Controller
     {
         // Validasi file
         $request->validate([
-            'file' => 'required|image|max:2048', // max 2MB, image only
+            'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $file = $request->file('file');
-        $filename = time() . '_' . $file->getClientOriginalName();
-        $path = $file->storeAs('slides', $filename, 'public');
-
+        $path = $request->file('gambar')->store('slide', 'public');
         $slide = new Slide();
-        $slide->gambar = '/storage/' . $path; // save path in DB
+        $slide->gambar = basename($path);
         $slide->save();
-
         return response()->json([
             'status' => true,
             'message' => 'File berhasil diupload!',
-            'data' => $slide,
-        ], 200);
+        ], 201);
     }
+
 
 
     /**
@@ -87,10 +84,8 @@ class SlideController extends Controller
                 'message' => 'data tidak di temukan',
             ], 404);
         }
-
         // ketentuan value data
-        $rules = ['gambar' => 'required|url'];
-
+        $rules = ['gambar' => 'required|file'];
         // validator jika gagal
         $validator = validator::make($request->all(), $rules);
         if ($validator->fails()) {
@@ -100,11 +95,15 @@ class SlideController extends Controller
                 'data' => $validator->errors(),
             ], 404);
         }
-
         // input data
-        $data->gambar = $request->gambar;
-
-        //data di save
+        if ($request->hasFile('gambar')) {
+            if ($data->gambar && Storage::disk('public')->exists($data->gambar)) {
+                Storage::disk('public')->delete($data->gambar);
+            }
+            // Simpan gambar baru
+            $gambarPath = $request->file('gambar')->store('slide', 'public');
+            $data->gambar = $gambarPath;
+        }
         $update = $data->save();
 
         return response()->json([

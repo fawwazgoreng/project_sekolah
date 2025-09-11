@@ -9,9 +9,11 @@ use App\Http\Controllers\Api\FasilitasController;
 use App\Http\Controllers\Api\KesiswaanController;
 use App\Http\Controllers\Api\PrestasiController;
 use App\Http\Controllers\Api\ProgramKerjaController;
+use App\Http\Controllers\Api\ProgramSekolahController;
 use App\Http\Controllers\Api\SejarahController;
 use App\Http\Controllers\Api\SlideController;
 use App\Http\Controllers\Api\VisiMisiController;
+use App\Models\programsekolah;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +31,10 @@ Route::apiResource('about',
 
 Route::apiResource('programkerja',
     ProgramKerjaController::class
+);
+
+Route::apiResource('programsekolah',
+    ProgramSekolahController::class
 );
 
 Route::apiResource('berita',
@@ -70,7 +76,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('admin/logout', [
         AdminAuthController::class, 'logout'
     ]);
-    Route::apiResource('admin', 
-    AdminController::class
-    );
 });
+
+Route::apiResource('admin',
+AdminController::class
+);

@@ -12,7 +12,11 @@ class BeritaController extends Controller
 {
     public function index()
     {
-        $data = Berita::all();
+        $data = Berita::all()->map(function ($item) {
+            $item->gambar = $item->gambar ? asset("storage/".$item->gambar) : null;
+            return $item;
+        });
+
         return response()->json([
             'status' => true,
             'message' => 'data ditemukan',
@@ -23,31 +27,26 @@ class BeritaController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'judul' => 'required',
-            'deskripsi' => 'required',
+            'judul' => 'required|string|max:255',
+            'deskripsi' => 'required|string',
             'gambar' => 'required|file|image|max:2048',
         ];
-
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
                 'message' => 'Gagal memasukkan data',
-                'data' => $validator->errors(),
+                'errors' => $validator->errors(),
             ], 422);
         }
-
         $berita = new Berita();
         $berita->judul = $request->judul;
         $berita->deskripsi = $request->deskripsi;
-
         if ($request->hasFile('gambar')) {
             $path = $request->file('gambar')->store('berita', 'public');
             $berita->gambar = $path;
         }
-
         $berita->save();
-
         return response()->json([
             'status' => true,
             'message' => 'Berhasil menambahkan berita',
@@ -64,6 +63,8 @@ class BeritaController extends Controller
                 'message' => 'Data tidak ditemukan'
             ], 404);
         }
+
+        $berita->gambar = $berita->gambar ? asset("storage/".$berita->gambar) : null;
 
         return response()->json([
             'status' => true,
@@ -82,8 +83,8 @@ class BeritaController extends Controller
         }
 
         $rules = [
-            'judul' => 'required',
-            'deskripsi' => 'required',
+            'judul' => 'required|string|max:255',
+            'deskripsi' => 'required|string',
             'gambar' => 'nullable|file|image|max:2048',
         ];
 
@@ -92,18 +93,18 @@ class BeritaController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Gagal update data',
-                'data' => $validator->errors(),
+                'errors' => $validator->errors(),
             ], 422);
         }
-
         $berita->judul = $request->judul;
         $berita->deskripsi = $request->deskripsi;
-
         if ($request->hasFile('gambar')) {
-            // Delete old file if exists
-            if ($berita->gambar) Storage::disk('public')->delete($berita->gambar);
+            if ($berita->gambar) {
+                $filePath = str_replace(asset('storage/berita/'), '', $berita->gambar);
+                Storage::disk('public')->delete($filePath);
+            }
             $path = $request->file('gambar')->store('berita', 'public');
-            $berita->gambar = $path;
+            $berita->gambar = basename($path);
         }
 
         $berita->save();
@@ -124,10 +125,11 @@ class BeritaController extends Controller
                 'message' => 'Data tidak ditemukan'
             ], 404);
         }
-
-        if ($berita->gambar) Storage::disk('public')->delete($berita->gambar);
+        if ($berita->gambar) {
+            $filePath = str_replace(asset('storage/'), '', $berita->gambar);
+            Storage::disk('public')->delete($filePath);
+        }
         $berita->delete();
-
         return response()->json([
             'status' => true,
             'message' => 'Berhasil menghapus berita'

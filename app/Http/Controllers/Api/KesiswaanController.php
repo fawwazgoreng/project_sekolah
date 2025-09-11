@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Kesiswaan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class KesiswaanController extends Controller
@@ -30,13 +31,11 @@ class KesiswaanController extends Controller
     {
         // membuat variabel dari model
         $data = new Kesiswaan;
-
         // ketentuan valuenya
         $rules = [
-            'gambar' => 'required|url',
             'judul' => 'required',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ];
-
         // validator manual jika gagal tambah
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
@@ -47,9 +46,11 @@ class KesiswaanController extends Controller
             ], 404);
         }
 
-        // validasi tambah data
-        $data->gambar = $request->gambar;
         $data->judul = $request->judul;
+        if ($request->hasFile('gambar')) {
+            $path = $request->file('gambar')->store('kesiswaan', 'public');
+            $data->gambar = basename($path);
+        }
         $post = $data->save();
 
         // mengvalidasi data sukses
@@ -68,13 +69,13 @@ class KesiswaanController extends Controller
         $data = Kesiswaan::find($id);
 
         // if else jika ada dan tidak ada
-        if($data) {
+        if ($data) {
             return response()->json([
                 'status' => true,
                 'message' => 'data ditemukan',
                 'data' => $data,
             ]);
-        }else {
+        } else {
             return response()->json([
                 'status' => false,
                 'message' => 'data tidak di temukan',
@@ -91,7 +92,7 @@ class KesiswaanController extends Controller
         $data = Kesiswaan::find($id);
 
         // jika id tidak ada
-        if(empty($data)) {
+        if (empty($data)) {
             return response()->json([
                 'status' => false,
                 'message' => 'data tidak di temukan',
@@ -100,8 +101,8 @@ class KesiswaanController extends Controller
 
         // ketentuan value data
         $rules = [
-            'gambar' => 'required|url',
             'judul' => 'required',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ];
 
         // validator jika gagal
@@ -113,14 +114,16 @@ class KesiswaanController extends Controller
                 'data' => $validator->errors(),
             ], 404);
         }
-
         // input data
-        $data->gambar = $request->gambar;
         $data->judul = $request->judul;
-        
-        //data di save
+        if ($request->hasFile('gambar')) {
+            if ($data->gambar && Storage::disk('public')->exists('kesiswaan/' . $data->gambar)) {
+                Storage::disk('public')->delete('kesiswaan/' . $data->gambar);
+            }
+            $path = $request->file('gambar')->store('kesiswaan', 'public');
+            $data->gambar = basename($path);
+        }
         $update = $data->save();
-
         return response()->json([
             'status' => true,
             'message' => 'sukses mengupdate data'
@@ -142,14 +145,13 @@ class KesiswaanController extends Controller
                 'message' => 'data tidak ditemukan',
             ], 404);
         }
-
         //data di hapus
         $delete = $data->delete();
-
         // validasi jika data berhasil
         return response()->json([
             'status' => true,
-            'message', 'sukses menghapus data'        
+            'message',
+            'sukses menghapus data'
         ], 200);
     }
 }
