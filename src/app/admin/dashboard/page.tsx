@@ -21,7 +21,6 @@ function deleteSlide(id: number) {
     });
 }
 
-
   return (
     <>
       <div className="flex flex-col gap-10 w-11/12 mx-auto mt-10 ">
@@ -31,7 +30,7 @@ function deleteSlide(id: number) {
       {slide.map((res) => {
         return (
             <span key={res.id} className=" w-full overflow-hidden rounded-md lg:w-[45%] lg:max-w-[900px] ">
-            <Image className="w-full xl:h-72 h-56 object-cover object-center" src={`${process.env.NEXT_PUBLIC_BASEPICTURE}${res.gambar}`} priority={true} alt={res.gambar} width={800} height={800}></Image>
+            <Image className="w-full xl:h-72 h-56 object-cover object-center" src={`${process.env.NEXT_PUBLIC_BASEPICTURE}/storage/slide/${res.gambar}`} priority={true} alt={res.gambar} width={800} height={800}></Image>
             <button onClick={() => deleteSlide(res.id)} className="my-2 py-2 px-4 w-20 text-center bg-red-600 text-white font-bold rounded-md">Hapus</button>
           </span>
         )

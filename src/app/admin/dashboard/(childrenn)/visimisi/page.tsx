@@ -32,13 +32,17 @@ export default function VisimisiAdmin() {
       if (!res.status) throw new Error("Failed to update Visi Misi");
       setData(res.data);
       setEdits({});
+      alert("Data berhasil diperbarui ✅");
+      window.location.reload();
     } catch (err) {
       console.error(err);
+      alert("Gagal update Visi Misi ❌");
     }
   };
 
-  const getFieldValue = (field: "visi" | "misi" | "moto") => edits?.[field] ?? data?.[field] ;
-  
+  const getFieldValue = (field: "visi" | "misi" | "moto") =>
+    edits?.[field] ?? data?.[field];
+
   return (
     <div className="w-full h-full flex justify-center flex-col text-black">
       <h1 className="text-hijau text-4xl font-bold my-5">Visi Misi</h1>

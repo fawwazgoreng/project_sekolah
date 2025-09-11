@@ -8,9 +8,9 @@ import { CSSProperties } from "react";
 import { ChevronRight, ChevronLeft} from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { DataAbout } from "../types/types";
 import { BeritaGet } from "../api/berita";
 import Link from "next/link";
+import { DataAbout } from "../types/types";
 
 export default function Berita() {
     const [mounted, setMounted] = useState(false);
@@ -28,6 +28,7 @@ export default function Berita() {
             setInitialSlide(3);
         }
     }, []);
+    console.log(beritaGet)
     if (!mounted) return null;
     const settings = {
         infinite: true,
@@ -66,7 +67,7 @@ export default function Berita() {
             <Slider {...settings} className="lg:w-11/12 w-11/12 flex mx-auto self-center justify-around overflow-hidden mt-40 berita-slick">
                 {beritaGet.map((res) => (
                     <Link href={`/berita/${res.id}`} key={res.id} className="w-full h-[470px] group rounded-sm bg-white shadow-lg overflow-hidden flex flex-col flex-wrap">
-                        <Image className="w-full h-56 relative object-cover object-center " src={`${process.env.NEXT_PUBLIC_BASEURL}/${res.gambar}`} alt={res.gambar} width={2000} height={2000}></Image>
+                        <Image className="w-full h-56 relative object-cover object-center " src={`${res.gambar}`} alt={res.gambar} width={2000} height={2000}></Image>
                         <span className="mt-4 w-11/12 flex flex-col mx-auto">
                             <p className="font-extralight text-[17px]">Berita</p>
                             <h2 className="text-ellipsis overflow-clip text-nowrap text-[20px] font-extrabold h-8 ">{res.judul}</h2>

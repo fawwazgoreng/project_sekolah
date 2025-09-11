@@ -17,20 +17,19 @@ export async function SlideGet() {
 }
 
 
-export async function SlideAdd(props:{picture: File ;}) {
-    try {const response = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/slide` , {
-        method: "post",
-        headers: {
-            "Content-type":"application/json"
-        },
-        body: JSON.stringify({
-            picture:props.picture,
-        })
-    }).then(item => item.json());
-    return response;} catch (err) {
-        console.log(err)
-    }
+export async function SlideAdd(formdata: FormData) {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/slide`, {
+      method: "POST",
+      body: formdata, // langsung kirim formdata
+    });
+
+    return await response.json();
+  } catch (err) {
+    console.error(err);
+  }
 }
+
 export async function SlideDelete(props: { id: number }) {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BASEURL}/slide/${props.id}`,

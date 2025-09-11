@@ -3,10 +3,10 @@
 import Image from "next/image";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { BeritaGetId, BeritaUpdate } from "@/app/api/berita";
+import { programsekolahGetId, programsekolahEdit } from "@/app/api/programsekolah";
 import { DataAbout } from "@/app/types/types";
 
-export default function EditBeritaAdmin() {
+export default function EditProgramSekolah() {
   const router = useRouter();
   const params = useParams();
   const id = params.id ? Number(params.id) : null;
@@ -16,17 +16,21 @@ export default function EditBeritaAdmin() {
   const [preview, setPreview] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
 
+
   useEffect(() => {
     setMounted(true);
     if (!id) return;
 
-    BeritaGetId(id).then((res) => {
+    programsekolahGetId(id).then((res) => {
       if (res.status) {
         setData(res.data);
-        setPreview(res.data.gambar || null); // set backend preview
+        // gambar dari backend
+        if (res.data.gambar) {
+          setPreview(`${process.env.NEXT_PUBLIC_BASEPICTURE}/storage/programsekolah/${res.data.gambar}`);
+        }
       } else {
         alert("Data tidak ditemukan");
-        router.push("/admin/dashboard/berita");
+        router.push("/admin/dashboard/programsekolah");
       }
     });
   }, [id, router]);
@@ -34,14 +38,22 @@ export default function EditBeritaAdmin() {
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
+
     setFile(selectedFile);
+
+    // buat object URL
+    const objectUrl = URL.createObjectURL(selectedFile);
+    setPreview(objectUrl);
   };
+
+  // cleanup URL agar tidak bocor
   useEffect(() => {
-    if (!file) return;
-    const url = URL.createObjectURL(file);
-    setPreview(url);
-    return () => URL.revokeObjectURL(url);
-  }, [file]);
+    return () => {
+      if (preview && preview.startsWith("blob:")) {
+        URL.revokeObjectURL(preview);
+      }
+    };
+  }, [preview]);
 
   // Handle form submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -53,18 +65,18 @@ export default function EditBeritaAdmin() {
       desc: { value: string };
     };
 
-    const formData = new FormData();
-    formData.append("judul", target.judul.value || data.judul);
-    formData.append("deskripsi", target.desc.value || data.deskripsi);
-    if (file) formData.append("gambar", file);
-
-    const result = await BeritaUpdate(id, formData);
+    const result = await programsekolahEdit({
+      id,
+      title: target.judul.value || data.judul,
+      desc: target.desc.value || data.deskripsi,
+      picture: file ?? undefined,
+    });
 
     if (result.status) {
-      alert("Berita updated successfully!");
-      router.push("/admin/dashboard/berita");
+      alert("Program Sekolah berhasil diupdate!");
+      router.push("/admin/dashboard/programsekolah");
     } else {
-      alert(result.message || "Failed to update berita. Check form errors.");
+      alert(result.message || "Gagal update Program Sekolah. Cek kembali form.");
     }
   };
 
@@ -105,10 +117,11 @@ export default function EditBeritaAdmin() {
           {preview ? (
             <div className="relative w-full h-[500px]">
               <Image
-                key={preview} // refresh Image component on preview change
+                key={preview}
                 src={preview}
                 alt="preview"
                 fill
+                priority
                 style={{ objectFit: "cover" }}
                 unoptimized
               />

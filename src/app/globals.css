@@ -43,7 +43,7 @@ body {
 }
 
 .asideNonActive {
-  @apply w-full h-0 absolute duration-500 z-50 bg-hijau overflow-hidden flex flex-col font-bold text-[20px] ;
+  @apply w-full h-0 absolute duration-500 z-50 bg-hijau overflow-hidden flex flex-col font-extrabold text-[20px] ;
 }
 
 .berita-slick .slick-slide > div {
@@ -60,4 +60,11 @@ body {
 
 .infiniteScales {
   animation: infiniteScale 12s linear 10s infinite alternate;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* jumlah baris */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }

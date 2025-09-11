@@ -9,20 +9,28 @@ export async function KesiswaanGet() {
     return response;
 }
 
-export async function KesiswaanAdd(props:{title: string; picture: File ; desc: string;}) {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/kesiswaan` , {
-        method: "post",
+export async function KesiswaanGetId(id:number) {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/kesiswaan/${id}` , {
+        method: "GET",
         headers: {
             "Content-type":"application/json"
         },
-        body: JSON.stringify({
-            title:props.title,
-            desc:props.desc,
-            picture:props.picture,
-        })
     }).then(item => item.json());
     return response;
 }
+
+export async function KesiswaanAdd(props: { title: string; picture: File }) {
+  const formData = new FormData();
+  formData.append("judul", props.title);
+  formData.append("gambar", props.picture);
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/kesiswaan`, {
+    method: "POST",
+    body: formData,
+  });
+
+  return await res.json();
+}
+
 export async function KesiswaanDelete(props:{id: string;}) {
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/kesiswaan/${props.id}` , {
         method: "DELETE",
@@ -34,4 +42,14 @@ export async function KesiswaanDelete(props:{id: string;}) {
         })
     }).then(item => item.json());
     return response;
+}
+
+export async function KesiswaanUpdate(id: number, formData: FormData) {
+  formData.append("_method", "PUT");
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/kesiswaan/${id}`, {
+    method: "POST",
+    body: formData,
+  });
+
+  return await res.json();
 }

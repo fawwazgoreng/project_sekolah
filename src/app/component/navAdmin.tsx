@@ -4,7 +4,9 @@ import { signOut } from 'next-auth/react';
 import { useState } from 'react';
 import Image, { StaticImageData } from 'next/image';
 import Link from 'next/link';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import AccountWt from '@/public/adminwt.png';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import AccountBl from '@/public/adminbl.png';
 import slidewt from '@/public/slidewt.png';
 import slidebl from '@/public/slidebl.png';
@@ -59,7 +61,7 @@ const NavBarAdmin = () => {
     <div>
       <div className="w-full md:flex flex-nowrap hidden">
         <div className=" h-full md:w-64 md:h-screen md:flex justify-between flex-col bg-white md:bg-hijau text-white">
-          <div className="w-11/12 mx-auto h-1/2 mt-4 flex flex-col items-center justify-center gap-2">
+          <div className="w-11/12 mx-auto h-3/5 mt-4 flex flex-col items-center justify-center gap-2">
             <Link href={`/admin/dashboard/`}
               className="w-full rounded-md hover:bg-blue-500 duration-200 h-20 text-2xl font-semibold capitalize flex items-center"
             >
@@ -79,6 +81,13 @@ const NavBarAdmin = () => {
             >
               <p className='ml-[10%] capitalize'>
                 program
+              </p>
+            </Link>
+            <Link href={`/admin/dashboard/programsekolah`}
+              className="w-full rounded-md hover:bg-blue-500 duration-200 h-20 text-2xl font-semibold capitalize flex items-center"
+            >
+              <p className='ml-[10%] capitalize'>
+                program sekolah
               </p>
             </Link>
             <Link href={`/admin/dashboard/sejarah`}
@@ -116,13 +125,13 @@ const NavBarAdmin = () => {
                 mading
               </p>
             </Link>
-            <Link href={`/admin/dashboard/admin`}
+            {/* <Link href={`/admin/dashboard/admin`}
               className="w-full rounded-md hover:bg-blue-500 duration-200 h-20 text-2xl font-semibold capitalize flex items-center"
             >
               <p className='ml-[10%] capitalize'>
                 admin
               </p>
-            </Link>
+            </Link> */}
           </div>
           <button onClick={() => signOut({callbackUrl: "/admin"})} className='mb-7 text-xl text-center items-center justify-center text-white bg-red-600 rounded-md w-28 font-bold flex mx-auto px-3 py-2'>Log out</button>
         </div>
@@ -139,12 +148,13 @@ const NavBarAdmin = () => {
           <NavItem defaultImg={slidebl} hoverImg={slidewt} label="Slide" href='/admin/dashboard' />
           <NavItem defaultImg={aboutbl} hoverImg={aboutwt} label="Fasilitas" href='/admin/dashboard/fasilitas' />
           <NavItem defaultImg={aboutbl} hoverImg={aboutwt} label="Program" href='/admin/dashboard/program' />
+          <NavItem defaultImg={aboutbl} hoverImg={aboutwt} label="Program sekolah" href='/admin/dashboard/programsekolah' />
           <NavItem defaultImg={hitorybl} hoverImg={hitorywt} label="Sejarah" href='/admin/dashboard/sejarah' />
           <NavItem defaultImg={visibl} hoverImg={visiwt} label="Visi Misi" href='/admin/dashboard/visimisi' />
           <NavItem defaultImg={newsbl} hoverImg={newswt} label="Berita" href='/admin/dashboard/berita' />
           <NavItem defaultImg={achibl} hoverImg={achiwt} label="Prestasi" href='/admin/dashboard/prestasi' />
           <NavItem defaultImg={madingbl} hoverImg={madingwt} label="Mading" href='/admin/dashboard/mading' />
-          <NavItem defaultImg={AccountBl} hoverImg={AccountWt} label="Admin" href='/admin/dashboard/admin' />
+          {/* <NavItem defaultImg={AccountBl} hoverImg={AccountWt} label="Admin" href='/admin/dashboard/admin' /> */}
         </div>
       </div>
     </div >

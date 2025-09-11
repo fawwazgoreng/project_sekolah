@@ -2,8 +2,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { DataAbout } from "@/app/types/types";
 import { BeritaDelete, BeritaGet } from "@/app/api/berita";
+import { DataAbout } from "@/app/types/types";
 
 
 export default function BeritaAdmin() {
@@ -28,16 +28,16 @@ export default function BeritaAdmin() {
                 <div className="mt-5 w-full flex flex-wrap justify-between gap-y-6">
                     {data.map((res, loop) => {
                         return (
-                            <div key={loop} className="w-full lg:w-[48%] xl:w-[32%]  min-h-96 shadow-lg rounded-md overflow-hidden">
+                            <div key={loop} className="w-full lg:w-[48%] xl:w-[32%] justify-between  min-h-96 shadow-lg rounded-md overflow-hidden">
                                 <span className="w-full h-48 overflow-hidden inline-block">
-                                    <Image src={`${process.env.NEXT_PUBLIC_BASEURL}/sejarah/${res.gambar}`} alt={res.gambar} width={800} height={800} className=" w-full h-full object-center object-cover"></Image>
+                                    <Image priority src={`${res.gambar}`} alt={res.gambar} width={800} height={800} className=" w-full h-full object-center object-cover"></Image>
                                 </span>
                                 <h1 className=" w-11/12 flex mx-auto text-xl font-bold mt-2">{res.judul}</h1>
-                                <p className="w-11/12 flex mx-auto text-wrap overflow-hidden mt-2 text-ellipsis">{res.deskripsi}</p>
+                                <p className="w-11/12 flex h-[72px] mx-auto text-wrap overflow-hidden mt-2 text-ellipsis line-clamp-3">{res.deskripsi}</p>
                                 <span className="w-11/12 flex mx-auto justify-between items-center">
                                     <p className="text-second text-md">{res.created_at?.split("T")[0]}</p>
                                     <span className="flex gap-4">
-                                        <Link className="my-2 py-2 px-4 w-20 text-center bg-blue-600 text-white font-bold rounded-md" href={"/admin/dashboard/berita/1"}>Edit</Link>
+                                        <Link className="my-2 py-2 px-4 w-20 text-center bg-blue-600 text-white font-bold rounded-md" href={`/admin/dashboard/berita/${res.id}`}>Edit</Link>
                                         <button onClick={() => DeleteBerita(res.id)} className="my-2 py-2 px-4 w-20 text-center bg-red-600 text-white font-bold rounded-md">Hapus</button>
                                     </span>
                                 </span>

@@ -1,114 +1,264 @@
-"use client"
+"use client";
+
 import { ChangeEvent, useEffect, useState } from "react";
 import Image from "next/image";
-import { PrestasiDelete, PrestasiGet } from "@/app/api/prestasi";
+import {
+    PrestasiGet,
+    PrestasiAdd,
+    PrestasiEdit,
+    PrestasiDelete,
+    PrestasiGetId,
+} from "@/app/api/prestasi";
 import { DataAbout } from "@/app/types/types";
 
 export default function PrestasiAdmin() {
-    const [data, setData] = useState<DataAbout[]>([]);
+    const [prestasi, setPrestasi] = useState<DataAbout[]>([]);
+    const [popupAddActive, setPopupAddActive] = useState(false);
+    const [popupEditActive, setPopupEditActive] = useState(false);
+    const [editId, setEditId] = useState<number | null>(null);
+    const [editPrestasi, setEditPrestasi] = useState<DataAbout | null>(null);
+    const [nama, setNama] = useState("");
+    const [desc, setDesc] = useState("");
+    const [file, setFile] = useState<File | null>(null);
+    const [preview, setPreview] = useState<string | null>(null);
+    console.log(prestasi);
+    // Fetch all prestasi
+    const fetchPrestasi = () => {
+        PrestasiGet()
+            .then((res) => setPrestasi(res.data))
+            .catch(console.error);
+    };
+
+    useEffect(() => fetchPrestasi(), []);
+
+    // Fetch prestasi by ID for editing
     useEffect(() => {
-        PrestasiGet().then((res) => setData(res.data)).catch((err) => console.log(err));
-    }, []);
-    function DeletePrestasi(id: number) {
-        PrestasiDelete({ id })
-            .then(() => {
-                window.location.reload();
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-    }
-    const [preview, setPreview] = useState<string>("");
+        if (editId !== null) {
+            PrestasiGetId(editId)
+                .then((res) => {
+                    setEditPrestasi(res.data);
+                    setNama(res.data.judul);
+                    setDesc(res.data.deskripsi);
+                    setPreview(`${process.env.NEXT_PUBLIC_BASEPICTURE}/storage/prestasi/${res.data.gambar}`);
+                })
+                .catch(console.error);
+        }
+    }, [editId]);
+
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            const url = URL.createObjectURL(file);
-            setPreview(url);
+        const selectedFile = e.target.files?.[0];
+        if (!selectedFile) return;
+        setFile(selectedFile);
+        setPreview(URL.createObjectURL(selectedFile));
+    };
+
+    const resetForm = () => {
+        setNama("");
+        setDesc("");
+        setFile(null);
+        setPreview(null);
+    };
+
+    const handleAddSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (!file) return alert("Please select a file!");
+        const res = await PrestasiAdd({ title: nama, desc, picture: file });
+        if (res.status) {
+            alert("Prestasi berhasil ditambahkan!");
+            setPopupAddActive(false);
+            resetForm();
+            fetchPrestasi();
+        } else {
+            alert("Gagal menambahkan prestasi");
         }
     };
-    const [pupUpActiv, setPupUpActiv] = useState(false);
-    const [pupUpEditActiv, setPupEditUpActiv] = useState(false);
-    function PopUp() {
-        return (
-            <>
-                <div className="w-full h-full fixed bg-slate-300 opacity-40 left-0 top-0">
-                </div>
-                <div className="flex flex-col p-3 gap-3 z-20 fixed bg-slate-50 w-auto h-auto left-0 right-0 top-0 bottom-0 md:left-[10%] rounded-lg md:bottom-[2%] md:right-[10%] md:top-[2%]">
-                    <button
-                        className="w-10 h-10 md:top-2 md:right-2 top-3 right-3 absolute z-50"
-                        onClick={() => setPupUpActiv(false)}
-                    >
-                        <span className="w-full h-full">
-                            <span className="w-7 h-0.5 rounded-full -right-3 absolute rotate-45 bg-black"></span>
-                            <span className="w-7 h-0.5 rounded-full -right-3 absolute -rotate-45 bg-black"></span>
-                        </span>
-                    </button>
-                    <label htmlFor="nama" className="mt-4">nama</label>
-                    <input type="text" id="nama" name="nama" className="w-full bg-slate-300  border-none outline-none rounded-md p-2" />
-                    <label htmlFor="desc" className="mt-4">description</label>
-                    <textarea id="desc" name="desc" className="w-full h-28 bg-slate-300  border-none outline-none rounded-md p-2" />
-                    <label htmlFor="gambar" className="text-white cursor-pointer w-56 rounded-xl px-3 py-2 text-xl font-bold bg-blue-600 text-center">upload gambar</label>
-                    {preview ? <Image src={preview} alt="" width={2000} height={2000} className="w-auto self-center min-h-72 max-h-72 object-cover object-center"></Image> :
-                        <div className="w-auto self-center min-h-72 max-h-72 object-cover object-center"></div>}
-                    <input type="file" id="gambar" onChange={(e) => handleFileChange(e)} className="hidden" />
-                    <button className="text-white cursor-pointer w-48 rounded-xl px-3 py-2 text-xl font-bold bg-blue-600 text-center">Submit</button>
-                </div>
-            </>
-        )
-    }
-    function PopUpEdit() {
-        return (
-            <>
-                <div className="w-full h-full fixed bg-slate-300 opacity-40 left-0 top-0">
-                </div>
-                <div className="flex flex-col p-3 gap-3 z-20 fixed bg-slate-50 w-auto h-auto left-0 right-0 top-0 bottom-0 md:left-[10%] rounded-lg md:bottom-[2%] md:right-[10%] md:top-[2%]">
-                    <button
-                        className="w-10 h-10 md:top-2 md:right-2 top-3 right-3 absolute z-50"
-                        onClick={() => setPupEditUpActiv(false)}
-                    >
-                        <span className="w-full h-full">
-                            <span className="w-7 h-0.5 rounded-full -right-3 absolute rotate-45 bg-black"></span>
-                            <span className="w-7 h-0.5 rounded-full -right-3 absolute -rotate-45 bg-black"></span>
-                        </span>
-                    </button>
-                    <label htmlFor="nama" className="mt-4">nama</label>
-                    <input type="text" id="nama" name="nama" className="w-full bg-slate-300  border-none outline-none rounded-md p-2" />
-                    <label htmlFor="desc" className="mt-4">description</label>
-                    <textarea id="desc" name="desc" className="w-full h-28 bg-slate-300  border-none outline-none rounded-md p-2" />
-                    <label htmlFor="gambar" className="text-white cursor-pointer w-56 rounded-xl px-3 py-2 text-xl font-bold bg-blue-600 text-center">edit gambar</label>
-                    {preview ? <Image src={preview} alt="" width={2000} height={2000} className="w-auto self-center min-h-72 max-h-72 object-cover object-center"></Image> :
-                        <div className="w-auto self-center min-h-72 max-h-72 object-cover object-center"></div>}
-                    <textarea id="desc" name="desc" className="w-full h-28 bg-slate-300  border-none outline-none rounded-md p-2" />
-                    <button className="text-white cursor-pointer w-48 rounded-xl px-3 py-2 text-xl font-bold bg-blue-600 text-center">Submit</button>
-                </div>
-            </>
-        )
-    }
+
+    const handleEditSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (!editPrestasi) return;
+        const res = await PrestasiEdit({
+            id: editId,
+            title: nama,
+            desc,
+            picture: file ? file : undefined,
+        });
+        if (res.status) {
+            alert("Prestasi berhasil diperbarui!");
+            setPopupEditActive(false);
+            resetForm();
+            setEditPrestasi(null);
+            setEditId(null);
+            fetchPrestasi();
+        } else {
+            alert("Gagal memperbarui prestasi");
+        }
+    };
+
+    const handleDelete = async (id: number) => {
+        if (!confirm("Apakah yakin ingin menghapus?")) return;
+        await PrestasiDelete(id);
+        fetchPrestasi();
+    };
+
+
     return (
-        <>
-            {pupUpActiv ? <PopUp /> : <></>}
-            {pupUpEditActiv ? <PopUpEdit /> : <></>}
-            <div className="flex flex-col gap-10 w-11/12 mx-auto mt-10 ">
-                <h1 className="text-hijau text-4xl font-bold">Prestasi</h1>
-                <button onClick={() => setPupUpActiv(true)} className="px-4 flex items-center  py-3 w-[100px] h-10 bg-blue-600 text-white rounded">Tambah</button>
-                <div className="mt-5 w-full flex flex-wrap justify-between gap-y-6">
-                    {data.map((res) => {
-                        return (
-                            <div key={res.id} className="w-full lg:w-[48%] xl:w-[32%]  min-h-96 shadow-lg rounded-md overflow-hidden">
-                                <span className="w-full h-48 overflow-hidden inline-block">
-                                    <Image src={`${process.env.NEXT_PUBLIC_BASEURL}/prestasi/${res.gambar}`} alt="" width={800} height={800} className=" w-full h-full object-center object-cover"></Image>
-                                </span>
-                                <h1 className=" w-11/12 flex mx-auto text-xl font-bold mt-2">{res.judul}</h1>
-                                <p className="w-11/12 flex mx-auto text-wrap overflow-hidden mt-2 text-ellipsis">{res.deskripsi}</p>
-                                <span className="w-11/12 flex mx-auto justify-end gap-5 p-2 items-center">
-                                    <button onClick={() => setPupEditUpActiv(true)} className="py-2 px-4 bg-blue-600 rounded-md w-20 text-white font-bold">Edit</button>
-                                    <button onClick={() => DeletePrestasi(res.id)} className="py-2 px-4 bg-red-600 rounded-md w-20 text-white font-bold">Hapus</button>
-                                </span>
-                            </div>
-                        )
-                    })}
+        <div className="w-11/12 mx-auto mt-10 flex flex-col gap-8">
+            {popupAddActive && (
+                <div className={`fixed inset-0 ${popupAddActive ? "flex" : "hidden"} bg-slate-300 z-10 justify-center items-center`}>
+                    <form
+                        onSubmit={handleAddSubmit}
+                        className="flex flex-col p-5 gap-4 bg-white rounded-lg w-11/12 md:w-2/3 lg:w-1/2 relative"
+                    >
+                        <label>Nama</label>
+                        <input
+                            type="text"
+                            value={nama}
+                            onChange={(e) => setNama(e.target.value)}
+                            className="w-full p-2 border rounded-md"
+                            required
+                        />
+                        <label>Description</label>
+                        <textarea
+                            value={desc}
+                            onChange={(e) => setDesc(e.target.value)}
+                            className="w-full p-2 border rounded-md"
+                            required
+                        />
+                        <label
+                            htmlFor="gambar"
+                            className="cursor-pointer px-3 py-2 w-56 text-center bg-blue-600 text-white font-bold rounded-md"
+                        >
+                            upload gambar
+                        </label>
+                        <input type="file" id="gambar" className="hidden" onChange={handleFileChange} />
+                        {preview ? (
+                            <Image
+                                src={preview}
+                                alt="preview"
+                                width={2000}
+                                height={2000}
+                                className="w-full max-h-72 object-cover object-center"
+                            />
+                        ) : (
+                            <div className="w-full max-h-72 bg-gray-200" />
+                        )}
+                        <button
+                            type="submit"
+                            className="px-4 py-2 bg-blue-600 text-white font-bold rounded-md"
+                        >
+                            Submit
+                        </button>
+                    </form>
                 </div>
+            )}
+            {popupEditActive && (
+                <div className={`fixed inset-0 ${popupEditActive ? "flex" : "hidden"} bg-slate-300 z-10 justify-center items-center`}>
+                    <form
+                        onSubmit={handleEditSubmit}
+                        className="flex flex-col p-5 gap-4 bg-white rounded-lg w-11/12 md:w-2/3 lg:w-1/2 relative"
+                    >
+                        <label>Nama</label>
+                        <input
+                            type="text"
+                            value={nama}
+                            onChange={(e) => setNama(e.target.value)}
+                            className="w-full p-2 border rounded-md"
+                            required
+                        />
+                        <label>Description</label>
+                        <textarea
+                            value={desc}
+                            onChange={(e) => setDesc(e.target.value)}
+                            className="w-full p-2 border rounded-md"
+                            required
+                        />
+                        <label
+                            htmlFor="gambar"
+                            className="cursor-pointer px-3 py-2 w-56 text-center bg-blue-600 text-white font-bold rounded-md"
+                        >
+                            Edit gambar
+                        </label>
+                        <input type="file" id="gambar" className="hidden" onChange={handleFileChange} />
+                        {preview ? (
+                            <Image
+                                src={preview}
+                                alt="preview"
+                                width={2000}
+                                height={2000}
+                                className="w-full max-h-72 object-cover object-center"
+                            />
+                        ) : (
+                            <div className="w-full max-h-72 bg-gray-200" />
+                        )}
+
+                        <div className="flex gap-3">
+                            <button
+                                type="submit"
+                                className="px-4 py-2 bg-blue-600 text-white font-bold rounded-md"
+                            >
+                                Submit
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setPopupEditActive(false);
+                                    resetForm();
+                                    setEditPrestasi(null);
+                                    setEditId(null);
+                                }}
+                                className="px-4 py-2 bg-gray-500 text-white font-bold rounded-md"
+                            >
+                                Batal
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            )}
+
+            <h1 className="text-4xl font-bold text-hijau">Prestasi</h1>
+            <button
+                onClick={() => setPopupAddActive(true)}
+                className="w-[120px] h-10 bg-blue-600 text-white rounded-md"
+            >
+                Tambah
+            </button>
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mt-5">
+                {prestasi.map((item) => (
+                    <div key={item.id} className="shadow-md rounded-md overflow-hidden">
+                        <div className="w-full h-56 relative">
+                            <Image
+                                src={`${process.env.NEXT_PUBLIC_BASEPICTURE}/storage/prestasi/${item.gambar}`}
+                                alt={item.judul}
+                                width={800}
+                                height={800}
+                                priority
+                                className="object-cover w-full h-full"
+                            />
+                        </div>
+                        <div className="p-4 flex flex-col gap-2">
+                            <h2 className="font-bold text-xl">{item.judul}</h2>
+                            <p className="text-sm">{item.deskripsi}</p>
+                            <div className="flex gap-3 mt-3">
+                                <button
+                                    onClick={() => {
+                                        setEditId(item.id);
+                                        setPopupEditActive(true);
+                                    }}
+                                    className="px-3 py-1 bg-blue-600 text-white rounded-md"
+                                >
+                                    Edit
+                                </button>
+                                <button
+                                    onClick={() => handleDelete(item.id)}
+                                    className="px-3 py-1 bg-red-600 text-white rounded-md"
+                                >
+                                    Hapus
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                ))}
             </div>
-        </>
-    )
+        </div>
+    );
 }

@@ -1,8 +1,8 @@
 "use client"
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { DataAbout } from "@/app/types/types";
 import { KesiswaanGet } from "@/app/api/kesiswaan";
+import { DataAbout } from "@/app/types/types";
 
 export default function Gallery() {
     const [data, setData] = useState<DataAbout[]>([]);
@@ -16,7 +16,7 @@ export default function Gallery() {
                 {data.map((res, loop) => {
                     return (
                         <div key={loop} className="lg:w-[30%] xl:w-[23%] sm:w-[48%] w-full group relative overflow-hidden rounded-lg">
-                            <Image src={`${process.env.NEXT_PUBLIC_BASEURL}/${res.gambar}`} alt={res.gambar} width={800} height={800} className="group-hover:blur-sm duration-500" />
+                            <Image src={`${process.env.NEXT_PUBLIC_BASEPICTURE}/storage/kesiswaan/${res.gambar}`} alt={res.gambar} width={800} height={800} className="group-hover:blur-sm duration-500" />
                             <div className="absolute top-full flex flex-col bg-black opacity-50 font-bold text-white z-10 group-hover:top-0 duration-500 w-full h-0 overflow-hidden group-hover:w-full group-hover:h-full">
                             </div>
                             <div className="absolute top-full w-full mx-auto self-auto text-white z-20 group-hover:top-0 duration-500 h-0 overflow-hidden group-hover:h-full">

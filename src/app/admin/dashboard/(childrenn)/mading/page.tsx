@@ -2,8 +2,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { DataAbout } from "@/app/types/types";
 import { KesiswaanDelete, KesiswaanGet } from "@/app/api/kesiswaan";
+import { DataAbout } from "@/app/types/types";
 
 export default function PrestasiAdmin() {
     const [data, setData] = useState<DataAbout[]>([]);
@@ -28,13 +28,12 @@ export default function PrestasiAdmin() {
                     {data.map((res) => {
                         return (
                             <div key={res.id} className="w-full lg:w-[48%] xl:w-[32%]  min-h-96 shadow-lg rounded-md overflow-hidden">
-                                <span className="w-full h-48 overflow-hidden inline-block">
-                                    <Image src={`${process.env.NEXT_PUBLIC_BASEURL}/kesiwaan/${res.gambar}`} alt="" width={800} height={800} className="hover:scale-110 duration-300 w-full h-full object-center object-cover"></Image>
+                                <span className="w-full mih-h-48 overflow-hidden inline-block">
+                                    <Image src={`${process.env.NEXT_PUBLIC_BASEPICTURE}/storage/kesiswaan/${res.gambar}`} alt={res.gambar} width={800} height={800} className="duration-300 w-full h-full object-center object-cover"></Image>
                                 </span>
                                 <h1 className=" w-11/12 flex mx-auto text-xl font-bold mt-2">{res.judul}</h1>
-                                <p className="w-11/12 flex mx-auto text-wrap overflow-hidden mt-2 text-ellipsis">{res.deskripsi}                                    </p>
                                 <span className="w-11/12 flex mx-auto justify-end gap-3 items-center">
-                                    <Link className="my-2 py-2 px-4 bg-blue-600 text-white font-bold rounded-md" href={"/admin/dashboard/mading/1"}>edit</Link>
+                                    <Link className="my-2 py-2 px-4 bg-blue-600 text-white font-bold rounded-md" href={`/admin/dashboard/mading/${res.id}`}>edit</Link>
                                     <button onClick={() => DeleteMading(`${res.id}`)} className="my-2 py-2 px-4 bg-red-600 text-white font-bold rounded-md" >Hapus</button>
                                 </span>
                             </div>

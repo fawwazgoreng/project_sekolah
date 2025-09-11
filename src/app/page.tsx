@@ -9,9 +9,10 @@ import { Card } from "./component/card";
 import Link from "next/link";
 import Wa from "@/public/WhatsApp.png";
 import Berita from "./component/berita";
-import { AboutGet, AboutprogramGet } from "./api/about";
+import { AboutGet } from "./api/about";
 import { useEffect, useState } from "react";
 import { DataAbout } from "./types/types";
+import { programsekolahGet } from "./api/programsekolah";
 
 
 
@@ -20,7 +21,7 @@ export default function Home() {
   const [programGet, setProgramGet] = useState<DataAbout[]>([]);
   useEffect(() => {
     AboutGet().then((res) => setAboutGet(res.data)).catch((err) => console.log(err));
-    AboutprogramGet().then((res) => setProgramGet(res.data)).catch((err) => console.log(err))
+    programsekolahGet().then((res) => setProgramGet(res.data)).catch((err) => console.log(err))
   }, [])
   console.log(aboutGet);
   return (
@@ -76,7 +77,7 @@ export default function Home() {
                     </article>
                     <div className="md:w-1/2 sm:w-10/12 h-full flex flex-col items-center text-center">
                       <p className="text-white mb-3 font-light text-[16px]">{res.judul}</p>
-                      <Image className="w-full md:max-w-96 max-w-[400px] md:w-96 h-72 overflow-hidden  rounded-lg " src={`${process.env.NEXT_PUBLIC_BASEURL}/${res.gambar}`} alt={res.gambar} width={800} height={800} />
+                      <Image priority className="w-full md:max-w-96 max-w-[400px] md:w-96 h-72 overflow-hidden  rounded-lg " src={`${process.env.NEXT_PUBLIC_BASEPICTURE}/storage/programsekolah/${res.gambar}`} alt={res.gambar} width={800} height={800} />
                     </div>
                   </div>
                 )

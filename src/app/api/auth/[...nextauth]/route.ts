@@ -1,78 +1,74 @@
-import { NextAuthOptions } from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import NextAuth from "next-auth";
 
-const authOptions: NextAuthOptions = {
-  session: {
-    strategy: "jwt",
-    maxAge: 24 * 60 * 60,
-  },
-  secret: "anjaijosid0-aid-a0wd",
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
-      type: "credentials",
-      name: "credentials",
+      name: "Admin Login",
       credentials: {
-        username: { label: "Username" },
+        username: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/admin/login`,
-          {
+        try {
+          const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/admin/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               username: credentials?.username,
               password: credentials?.password,
             }),
+          });
+
+          console.log("Laravel raw response:", res.status);
+          const data = await res.json();
+          console.log("Laravel response body:", data);
+
+          if (res.ok && data.status === true && data.admin && data.token) {
+            return {
+              id: String(data.admin.id),
+              username: data.admin.username,
+              token: data.token,
+            };
           }
-        );
-        if (!res.ok) return null;
-        const data = await res.json();
-        return {
-          id: data.admin.id,
-          username: data.admin.username,
-          accessToken: data.token,
-        };
+
+          return null; // triggers 401
+        } catch (err) {
+          console.error("Authorize error:", err);
+          return null;
+        }
       },
     }),
   ],
+
+  session: { strategy: "jwt" },
+
   callbacks: {
-    async jwt({ token, user, account }) {
-      if (account?.provider === "credentials" && user) {
+    async jwt({ token, user }) {
+      if (user) {
         token.id = user.id;
         token.username = user.username;
-        token.accessToken = user.accessToken; // now it exists
+        token.accessToken = user.token; // simpan Sanctum token
       }
       return token;
     },
-
     async session({ session, token }) {
-      if ("username" in token) {
-        session.user = {
-          id: token.id,
-          username: token.username,
-          accessToken: token.accessToken, // now it exists
-        };
-      }
+      session.user = {
+        id: token.id as string,
+        username: token.username as string,
+      };
+      session.accessToken = token.accessToken as string;
       return session;
     },
   },
+
   pages: {
-    signIn: "/admin",
+    signIn: "/admin", // halaman login custom
+    error: "/admin", // redirect kalau gagal
   },
-  cookies: {
-    sessionToken: {
-      name: "next-auth.session-token",
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-      },
-    },
-  },
+
+  secret: process.env.NEXTAUTH_SECRET,
+  debug: process.env.NODE_ENV === "development",
 };
 
 const handler = NextAuth(authOptions);

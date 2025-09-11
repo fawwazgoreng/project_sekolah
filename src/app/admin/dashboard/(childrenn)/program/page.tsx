@@ -3,8 +3,8 @@ import {
   AboutExtraAdd, AboutExtraDelete, AboutExtraEdit, AboutExtraGet, 
   AboutProgramAdd, AboutprogramDelete, AboutProgramEdit, AboutprogramGet 
 } from "@/app/api/about";
-import { DataAbout } from "@/app/types/types";
 import { useEffect, useState } from "react";
+import { DataAbout } from "@/app/types/types";
 
 export default function ProgramAdmin() {
   const [extra, setExtra] = useState<DataAbout[]>([]);
@@ -15,7 +15,7 @@ export default function ProgramAdmin() {
   useEffect(() => {
     AboutExtraGet().then((res) => setExtra(res.data)).catch((err) => console.log(err));
     AboutprogramGet().then((res) => setProgram(res.data)).catch((err) => console.log(err));
-  }, []);
+  }, [program , extra , newExtra , newProgram]);
 
   async function EditExtra(id: number, judul: string) {
     const result = await AboutExtraEdit( id, judul );
@@ -41,7 +41,6 @@ export default function ProgramAdmin() {
     const res = await AboutExtraAdd(newExtra);
     if (res.status) {
       setExtra((prev) => [...prev, res.data]); 
-      setNewExtra(""); // reset input
       window.location.reload();
     } else {
       console.log("Gagal tambah:", res.message);
@@ -83,7 +82,7 @@ export default function ProgramAdmin() {
   return (
     <div className="flex flex-col gap-10 w-11/12 mx-auto mt-10">
       <h1 className="text-hijau text-4xl font-bold">Program sekolah dan Extrakulikuler</h1>
-      <span className="w-full flex flex-row flex-wrap justify-around items-center gap-y-7">
+      <span className="w-full flex flex-row flex-wrap justify-around gap-y-7">
         
         {/* Extrakurikuler */}
         <div className="inline-block xl:w-[43%] w-full mx-auto min-h-40 py-4 bg-second rounded-md">
@@ -106,7 +105,7 @@ export default function ProgramAdmin() {
                 <tr>
                   <th>no</th>
                   <th className="text-start lg:pl-6 pl-2">nama Extrakurikuler</th>
-                  <th>action</th>
+                  <th>hapus</th>
                 </tr>
               </thead>
               <tbody>
@@ -155,7 +154,7 @@ export default function ProgramAdmin() {
                 <tr>
                   <th>no</th>
                   <th className="text-start lg:pl-6 pl-2">nama program</th>
-                  <th>action</th>
+                  <th>hapus</th>
                 </tr>
               </thead>
               <tbody>

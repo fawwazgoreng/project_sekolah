@@ -9,16 +9,12 @@ import { ChevronRight, ChevronLeft } from "lucide-react";
 import Image from "next/image";
 import { SlideGet } from "../api/slide";
 
-// const Szlider = dynamic(() => import("react-slick"), {
-//   ssr: false, // disable SSR untuk komponen ini
-// });
 
-
-    type DataItem = {
-  id: number;
-  gambar: string;
-  created_at: string | null;
-  updated_at: string | null;
+type DataItem = {
+    id: number;
+    gambar: string;
+    created_at: string | null;
+    updated_at: string | null;
 };
 
 
@@ -27,13 +23,13 @@ interface Props {
 }
 
 export const Card: React.FC<Props> = ({ Arrow }) => {
-     const [data, setDataitem] = useState<DataItem[]>([]);
+    const [data, setDataitem] = useState<DataItem[]>([]);
 
-  useEffect(() => {
-    SlideGet()
-      .then((res) => setDataitem(res.data))
-      .catch((err) => console.log(err));
-  }, []);
+    useEffect(() => {
+        SlideGet()
+            .then((res) => setDataitem(res.data))
+            .catch((err) => console.log(err));
+    }, []);
     const settings = {
         infinite: true,
         speed: 2000,
@@ -52,15 +48,14 @@ export const Card: React.FC<Props> = ({ Arrow }) => {
     return (
         <>
             <Slider {...settings} className="w-full overflow-hidden">
-                <div className="w-full lg:h-[550px] h-64 sm:h-96 overflow-hidden"></div>
                 {data.map((res, loop) => {
                     return (
                         <div key={loop + 1} className="w-full lg:h-[550px] h-64 sm:h-96 overflow-hidden">
-                        <div className="w-full lg:h-[550px] h-64 sm:h-96 overflow-hidden bg-black absolute z-10 opacity-10"></div>
-                        <Image className="w-full h-full  infiniteScales relative object-cover object-center " src={`${process.env.NEXT_PUBLIC_BASEURL}/${res.gambar}`} alt={`${res.gambar}`} width={2000} height={2000}></Image>
-                    </div>
+                            <div className="w-full lg:h-[550px] h-64 sm:h-96 overflow-hidden bg-black absolute z-10 opacity-5"></div>
+                            <Image className="w-full h-full  infiniteScales relative object-cover object-center " src={`${process.env.NEXT_PUBLIC_BASEPICTURE}/storage/slide/${res.gambar}`} alt={`${res.gambar}`} width={2000} height={2000}></Image>
+                        </div>
                     )
-})}
+                })}
             </Slider>
         </>
     );

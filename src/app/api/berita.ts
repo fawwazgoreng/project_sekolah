@@ -1,3 +1,4 @@
+import {DataAboutBerita } from "../types/types";
 
 export async function BeritaGet() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/berita`, {
@@ -7,7 +8,7 @@ export async function BeritaGet() {
   return await res.json();
 }
 
-export async function BeritaGetId(id: string) {
+export async function BeritaGetId(id: number) :Promise<{data : DataAboutBerita}> {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/berita/${id}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
@@ -15,13 +16,7 @@ export async function BeritaGetId(id: string) {
   return await res.json();
 }
 
-export async function BeritaAdd(props: { judul: string; deskripsi: string; tanggal: string; gambar: File }) {
-  const formData = new FormData();
-  formData.append("judul", props.judul);
-  formData.append("deskripsi", props.deskripsi);
-  formData.append("tanggal", props.tanggal);
-  formData.append("gambar", props.gambar);
-
+export async function BeritaAdd(formData : FormData) {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/berita`, {
       method: "POST",
@@ -31,6 +26,34 @@ export async function BeritaAdd(props: { judul: string; deskripsi: string; tangg
   } catch (err) {
     console.error(err);
     return { status: false, message: "Gagal menambahkan berita" };
+  }
+}
+
+export async function BeritaUpdate(id: number | null, formData: FormData) {
+  if (id === null) return { status: false, message: "ID is null" };
+
+  formData.append("_method", "PUT");
+
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/berita/${id}`, {
+      method: "POST", // POST with _method=PUT
+      body: formData,
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      return {
+        status: false,
+        message: errorData.message || "Server validation error",
+        errors: errorData.errors || {},
+      };
+    }
+
+    const data = await res.json();
+    return { status: true, data };
+  } catch (err) {   
+    console.error("Failed to update berita:", err);
+    return { status: false, message: "Update error" };
   }
 }
 

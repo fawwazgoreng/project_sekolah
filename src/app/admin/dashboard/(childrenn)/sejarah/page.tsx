@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { useEffect, useState, ChangeEvent } from "react";
-import { DataAbout } from "@/app/types/types";
 import { SejarahGet, SejarahEdit } from "@/app/api/sejarah";
+import { DataAbout } from "@/app/types/types";
 
 export default function SejarahAdmin() {
     const [data, setData] = useState<DataAbout[]>([]);

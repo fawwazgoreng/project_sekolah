@@ -1,10 +1,10 @@
-"use client"
-import { BeritaAdd } from "@/app/api/berita";
+"use client";
+import { programsekolahAdd } from "@/app/api/programsekolah";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useState, useEffect } from "react";
 
-export default function AddBeritaAdmin() {
+export default function AddProgramSekolah() {
   const [preview, setPreview] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const router = useRouter();
@@ -34,25 +34,27 @@ export default function AddBeritaAdmin() {
     setFile(null);
     setPreview(null);
   };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!file) return alert("Please select a file!");
-    const formData = new FormData();
     const target = e.target as typeof e.target & {
       judul: { value: string };
       desc: { value: string };
     };
-    formData.append("judul", target.judul.value);
-    formData.append("deskripsi", target.desc.value);
-    formData.append("gambar", file);
+
     try {
-      const res = await BeritaAdd(formData);
+      const res = await programsekolahAdd({
+        title: target.judul.value,
+        desc: target.desc.value,
+        picture: file,
+      });
       console.log(res);
-      alert("Berita added successfully!");
-      router.push("/admin/dashboard/berita");
+      alert("Program Sekolah berhasil ditambahkan!");
+      router.push("/admin/dashboard/programsekolah");
     } catch (err) {
       console.error(err);
-      alert("Failed to add berita.");
+      alert("Gagal menambahkan Program Sekolah.");
     }
   };
 
@@ -69,7 +71,7 @@ export default function AddBeritaAdmin() {
             type="text"
             id="judul"
             name="judul"
-            defaultValue=""
+            required
           />
         </span>
 

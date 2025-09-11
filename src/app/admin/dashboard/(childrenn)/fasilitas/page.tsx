@@ -68,8 +68,11 @@ export default function DashboardAboutPage() {
   const handleEditSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!fasilitasEdit) return;
+
     const judul = (e.currentTarget.elements.namedItem("nama") as HTMLInputElement).value;
+
     const gambar = file ? file : null;
+
     const response = await AboutFasilitasEdit({
       id: fasilitasEdit.id,
       judul,
@@ -236,9 +239,8 @@ export default function DashboardAboutPage() {
                     className="w-full h-full hover:scale-110 duration-300 object-cover object-center"
                   />
                 </span>
-
                 <span className="w-full flex justify-between py-5">
-                  <h1 className="text-2xl text-hijau font-bold group-hover:translate-x-4 group-hover:scale-105 duration-300">
+                  <h1 className="text-2xl h-[72px] line-clamp-3 text-hijau font-bold group-hover:translate-x-4 group-hover:scale-105 duration-300">
                     {item.judul}
                   </h1>
                   <span className="flex justify-center gap-5">

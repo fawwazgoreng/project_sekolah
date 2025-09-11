@@ -1,9 +1,9 @@
 "use client"
-import { DataAbout } from "@/app/types/types";
 import Sejarah from "../../sejarah/page"
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { AboutExtraGet, AboutFasilitasGet, AboutprogramGet } from "@/app/api/about";
+import { DataAbout } from "@/app/types/types";
 
 export default function Profil() {
     const [fasilitas , setFasilitas] = useState<DataAbout[]>([]);
@@ -25,7 +25,7 @@ export default function Profil() {
                         return (
                         <span key={loop} className="border-black lg:w-[32%] justify-between h-72 lg:h-80 sm:w-[45%] w-full max-w-[500px]">
                         <div className="w-full h-52 lg:h-64 overflow-hidden rounded-md">
-                            <Image src={`${process.env.NEXT_PUBLIC_BASEURL}/${res.gambar}`} alt={res.gambar} className="w-full h-52 lg:h-64 object-cover hover:scale-125 duration-500 object-center" />
+                            <Image width={800} height={800} src={`${process.env.NEXT_PUBLIC_BASEPICTURE}/storage/${res.gambar}`} alt={res.gambar} className="w-full h-52 lg:h-64 object-cover hover:scale-125 duration-500 object-center" />
                         </div>
                         <p className="text-center text-xl mt-2 font-bold text-hijau">{res.judul}</p>
                     </span>
@@ -40,9 +40,9 @@ export default function Profil() {
                 <span className="md:w-[43%] w-full">
                     <h1 className="text-2xl pb-5">Extrakulikuner : </h1>
                     <ol type="1" className="text-lg">
-                        {extra.map((res) => {
+                        {extra.map((res , loop) => {
                             return (
-                                <li key={res.id}>{res.judul}</li>
+                                <li key={res.id}>{loop + 1}. {res.judul}</li>
                             )
                         })}
                     </ol>
@@ -50,9 +50,9 @@ export default function Profil() {
                 <span className="md:w-[43%] w-full">
                     <h1 className="text-2xl pb-5">program pembelajaran : </h1>
                     <ol type="1" className="text-lg">
-                        {program.map((res) => {
+                        {program.map((res , loop) => {
                             return (
-                                <li key={res.id}>{res.judul}</li>
+                                <li key={res.id}>{loop + 1}. {res.judul}</li>
                             )
                         })}
                     </ol>

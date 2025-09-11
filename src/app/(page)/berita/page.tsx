@@ -16,8 +16,8 @@ export default function BeritaNews() {
                 <div className="lg:w-11/12 w-11/12 flex mx-auto flex-wrap self-center justify-center overflow-hidden gap-4 mt-20 berita-slick">
                     {data.map((res , loop) => {
                         return (
-                        <Link key={loop} href={`/berita/`} className="group w-full sm:w-[40%] lg:w-[30%] xl:w-[24%] h-[470px] rounded-sm bg-white shadow-lg inset-shadow-xs overflow-hidden flex flex-col flex-wrap">
-                        <Image className=" w-full max-h-56 relative object-cover object-center " src={`${process.env.NEXT_PUBLIC_BASEURL}/${res.gambar}`} alt={res.gambar} width={2000} height={2000}></Image>
+                        <Link key={loop} href={`/berita/${res.id}`} className="group w-full sm:w-[40%] lg:w-[30%] xl:w-[24%] h-[470px] rounded-sm bg-white shadow-lg inset-shadow-xs overflow-hidden flex flex-col flex-wrap">
+                        <Image priority className=" w-full max-h-56 relative object-cover object-center " src={res.gambar} alt={res.gambar} width={2000} height={2000}></Image>
                         <span className="mt-4 w-11/12 flex flex-col mx-auto">
                             <p className="font-extralight text-[17px]">Berita</p>
                             <h2 className="text-ellipsis overflow-clip text-nowrap text-[20px] font-extrabold h-8 ">{res.judul}</h2>

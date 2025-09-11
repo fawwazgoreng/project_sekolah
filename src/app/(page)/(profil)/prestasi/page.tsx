@@ -31,7 +31,7 @@ export default function Prestasi() {
                             <div key={loop} className=" max-w-full overflow-hidden md:flex-row  justify-center  shadow-lg inset-shadow-xs rounded-[14px] flex flex-col gap-5 pr-2">
                                 <Image
                                     className="md:rounded-[14px] object-cover object-center w-full md:w-1/2 xl:w-1/3 h-auto"
-                                    src={`${process.env.NEXT_PUBLIC_BASEURL}/${res.gambar}`}
+                                    src={`${process.env.NEXT_PUBLIC_BASEPICTURE}/storage/prestasi/${res.gambar}`}
                                     width={800}
                                     height={800}
                                     alt={`${res.gambar}`}
@@ -39,10 +39,10 @@ export default function Prestasi() {
                                 <div className="w-11/12 flex flex-col mx-auto md:w-1/2 lg:w-2/3 mt-3">
                                     <article className="w-full text-wrap flex flex-col gap-2 md:gap-1 lg:gap-2">
                                         <p className="font-bold text-[18px] md:text-[16px]">
-                                            ${res.judul}
+                                            {res.judul}
                                         </p>
                                         <p className="font-light md:text-[15px] lg:text-[17px]">
-                                            ${res.deskripsi}
+                                            {res.deskripsi}
                                         </p>
                                     </article>
                                 </div>

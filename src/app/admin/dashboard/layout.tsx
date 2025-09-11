@@ -22,6 +22,7 @@ export default function RootLayout({
           router.push("/admin")
         };
       }, [router, status]);
+      console.log(status);
     return (
             <div className={` antialiased capitalize bg-second`}>
                 <SessionProvider>
