@@ -16,7 +16,7 @@ class AboutController extends Controller
     public function index()
     {
         // tampilkan semua data
-        $data = About::all();
+        $data = About::orderBy('created_at', 'desc')->get();
         return response()->json([
             'status' => true,
             'message' => 'data ditemukan',

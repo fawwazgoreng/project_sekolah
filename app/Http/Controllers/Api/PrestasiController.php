@@ -15,7 +15,7 @@ class PrestasiController extends Controller
      */
     public function index()
     {
-        $data = Prestasi::all();
+        $data = Prestasi::orderBy('created_at', 'desc')->get();
         return response()->json([
             'status' => true,
             'message' => 'data ditemukan',

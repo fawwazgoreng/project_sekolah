@@ -16,7 +16,7 @@ class ProgramSekolahController extends Controller
     public function index()
     {
         // tampilkan semua data
-        $data = programsekolah::all();
+        $data = programsekolah::orderBy('created_at', 'desc')->get();
         return response()->json([
             'status' => true,
             'message' => 'data ditemukan',

@@ -12,11 +12,10 @@ class BeritaController extends Controller
 {
     public function index()
     {
-        $data = Berita::all()->map(function ($item) {
+        $data = Berita::orderBy('created_at', 'desc')->get()->map(function ($item) {
             $item->gambar = $item->gambar ? asset("storage/".$item->gambar) : null;
             return $item;
         });
-
         return response()->json([
             'status' => true,
             'message' => 'data ditemukan',

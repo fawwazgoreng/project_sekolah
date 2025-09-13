@@ -16,7 +16,7 @@ class ProgramKerjaController extends Controller
     public function index()
     {
         // tampilkan semua data
-        $data = ProgramKerja::all();
+        $data = ProgramKerja::orderBy('created_at', 'desc')->get();
         return response()->json([
             'status' => true,
             'message' => 'data ditemukan',

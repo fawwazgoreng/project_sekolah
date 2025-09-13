@@ -15,7 +15,7 @@ class EkstrakulikulerController extends Controller
      */
     public function index()
     {
-        $data = Ekstrakulikuler::all();
+        $data = Ekstrakulikuler::orderBy('created_at', 'desc')->get();
         return response()->json([
             'status' => true,
             'message' => 'data ditemukan',

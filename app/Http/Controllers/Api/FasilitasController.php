@@ -15,7 +15,7 @@ class FasilitasController extends Controller
     public function index()
     {
         // tampilkan semua data
-        $data = Fasilitas::all();
+        $data = Fasilitas::orderBy('created_at', 'desc')->get();
         return response()->json([
             'status' => true,
             'message' => 'data ditemukan',
