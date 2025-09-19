@@ -7,52 +7,56 @@ import { ChangeEvent, useState, useEffect } from "react";
 export default function AddBeritaAdmin() {
   const [preview, setPreview] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
-  // handle file change
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
       if (preview) URL.revokeObjectURL(preview);
-
       const objectUrl = URL.createObjectURL(selectedFile);
       setFile(selectedFile);
       setPreview(objectUrl);
     }
   };
 
-  // cleanup preview saat unmount
   useEffect(() => {
     return () => {
       if (preview) URL.revokeObjectURL(preview);
     };
   }, [preview]);
 
-  // reset file + preview
   const handleReset = () => {
     if (preview) URL.revokeObjectURL(preview);
     setFile(null);
     setPreview(null);
   };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!file) return alert("Please select a file!");
+
+    setIsSubmitting(true);
     const formData = new FormData();
     const target = e.target as typeof e.target & {
       judul: { value: string };
       desc: { value: string };
     };
+
     formData.append("judul", target.judul.value);
     formData.append("deskripsi", target.desc.value);
     formData.append("gambar", file);
+
     try {
       const res = await BeritaAdd(formData);
       console.log(res);
-      alert("Berita added successfully!");
+      alert("Berhasil menambah Berita!");
       router.push("/admin/dashboard/berita");
     } catch (err) {
       console.error(err);
-      alert("Failed to add berita.");
+      alert("Gagal menambah berita.");
+    } finally {
+      setIsSubmitting(false); // release button
     }
   };
 
@@ -69,7 +73,7 @@ export default function AddBeritaAdmin() {
             type="text"
             id="judul"
             name="judul"
-            defaultValue=""
+            required
           />
         </span>
 
@@ -121,15 +125,21 @@ export default function AddBeritaAdmin() {
             name="desc"
             id="desc"
             className="resize-none border-none outline-none w-full min-h-96 p-2 bg-slate-100"
+            required
           />
         </span>
 
         {/* Submit Button */}
         <button
           type="submit"
-          className="px-4 flex items-center py-3 w-[100px] h-10 bg-blue-600 text-white rounded"
+          disabled={isSubmitting}
+          className={`px-4 flex items-center py-3 w-[120px] h-10 rounded text-white ${
+            isSubmitting
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-700"
+          }`}
         >
-          Tambah
+          {isSubmitting ? "Proses..." : "Tambah"}
         </button>
       </form>
     </div>

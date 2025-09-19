@@ -4,30 +4,33 @@ import { CardTop } from "@/app/component/CardSecond"
 export default function Kurikulum() {
     return (
         <>
-            <Card Arrow={false}/>
-            <CardTop title="Kurikulum mengacu pada Kurikulum Merdeka atau K13 Revisi, dengan penekanan pada keterampilan teknis (hard skills) dan kecakapan kerja (soft skills). Terdiri dari:"/>
+            <Card Arrow={false} />
+            <CardTop title="Kurikulum mengacu pada Kurikulum Merdeka atau K13 Revisi, dengan penekanan pada keterampilan teknis (hard skills) dan kecakapan kerja (soft skills). Terdiri dari:" />
             <div className="w-200 h-320 sm:ml-20 ml-10  mt-40 ">
-            <p className="text-[#00978F] font-bold text-[18px] md:text-[24px]">1. Mata Pelajaran Umum (Normatif & Adatif)</p>
-            <div>
-                <p className="md:text-[20px] text-[15px] font-bold mt-[5px]">Normatif:</p>
-                <ul className="list-inside list-disc mt-[5px] text-[12px] md:text-[15px]">
-                    <li>Pendidikan Agama dan Budi Pekerti</li>
-                    <li>PPKN</li>
-                    <li>Bahasa Indonesia</li>
-                    <li>Matematika</li>
-                    <li>Sejarah Indonesia</li>
-                    <li>PJOK</li>
-                    <li>Seni Budaya</li>
-                </ul>
-            </div> 
-            <div> 
-                <p className="md:text-[20px] text-[15px] font-bold mt-[5px]">Adaptif:</p>
-                <ul className="list-inside list-disc mt-[5px] text-[12px] md:text-[15px]">
-                    <li>Bahasa Inggris</li>
-                    <li>Kewirausahaan</li>
-                    <li>Simulasi Digital</li>
-                </ul>
-            </div> 
+                <p className="text-[#00978F] font-bold text-[18px] md:text-[24px]">Mata Pelajaran</p>
+                <div>
+                    <p className="md:text-[20px] text-[15px] font-bold mt-[5px]">Umum :</p>
+                    <ul className="list-inside list-disc mt-[5px] text-[12px] md:text-[15px]">
+                        <li>Pendidikan Kewarganegaraan</li>
+                        <li>Bahasa Indonesia</li>
+                        <li>Bahasa Arab</li>
+                        <li>Bahasa Inggris</li>
+                        <li>Matematika</li>
+                        <li>Ilmu Pengetahuan Alam (IPA)</li>
+                        <li>Ilmu Pengetahuan Sosial (IPS)</li>
+                        <li>Seni Budaya</li>
+                        <li>Pendidikan Jasmani, Olahraga, dan Kesehatan (PJOK)</li>
+                        <li>Prakarya atau Informatika</li>
+                    </ul>
+                </div>
+                <div>
+                    <p className="md:text-[20px] text-[15px] font-bold mt-[5px]">Keagamman :</p>
+                    <ul className="list-inside list-disc mt-[5px] text-[12px] md:text-[15px]">
+                        <li>Al-Qur&apos;an Hadis</li>
+                        <li>Akidah Akhlak</li><li>Fikih</li>
+                        <li>Sejarah Kebudayaan Islam (SKI)</li>
+                    </ul>
+                </div>
                 {/* <p className="text-[#00978F] font-bold text-[18px] md:text-[24px] mt-[15px]">2. Mata Pelajaran Kejuruan (Produktif)</p>
                 <div className="mt-[10px]">
                     <p className="md:text-[20px] text-[15px] font-bold mt-[5px]">A. Jurusan Rekayasa Perangkat Lunak (RPL)</p>
@@ -65,7 +68,7 @@ export default function Kurikulum() {
                 </ul>
                 </div>
                 </div> */}
-        </div>
+            </div>
         </>
     )
 }

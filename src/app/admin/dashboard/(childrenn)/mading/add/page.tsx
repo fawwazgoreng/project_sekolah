@@ -4,12 +4,13 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useState } from "react";
 
-
 export default function AddMadingAdmin() {
   const [judul, setJudul] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string>("");
+  const [loading, setLoading] = useState(false);
   const route = useRouter();
+
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
@@ -20,12 +21,12 @@ export default function AddMadingAdmin() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!file) {
       alert("Pilih gambar dulu!");
       return;
     }
-
+    if (loading) return;
+    setLoading(true);
     try {
       const result = await KesiswaanAdd({ title: judul, picture: file });
       if (result.status) {
@@ -33,14 +34,15 @@ export default function AddMadingAdmin() {
         setJudul("");
         setFile(null);
         setPreview("");
-        route.push("/admin/dashboard/mading")
+        route.push("/admin/dashboard/mading");
       } else {
-        console.error(result);
         alert("Gagal tambah mading");
       }
     } catch (err) {
       console.error(err);
       alert("Terjadi error!");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -48,7 +50,9 @@ export default function AddMadingAdmin() {
     <div className="w-5/6 gap-5 flex mx-auto flex-col">
       <form onSubmit={handleSubmit} className="flex w-full flex-col gap-7">
         <span className="flex gap-2 flex-col">
-          <label className="text-2xl font-bold" htmlFor="judul">Judul</label>
+          <label className="text-2xl font-bold" htmlFor="judul">
+            Judul
+          </label>
           <input
             className="border-slate-500 outline-slate-500 bg-slate-100 p-2"
             type="text"
@@ -58,7 +62,6 @@ export default function AddMadingAdmin() {
             required
           />
         </span>
-
         <span className="flex gap-2 flex-col">
           <label
             htmlFor="gambar"
@@ -87,9 +90,12 @@ export default function AddMadingAdmin() {
         </span>
         <button
           type="submit"
-          className="px-4 flex items-center py-3 w-[100px] h-10 bg-blue-600 text-white rounded"
+          disabled={loading}
+          className={`px-4 flex items-center py-3 w-[100px] h-10 text-white rounded ${
+            loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600"
+          }`}
         >
-          Submit
+          {loading ? "..." : "Submit"}
         </button>
       </form>
     </div>

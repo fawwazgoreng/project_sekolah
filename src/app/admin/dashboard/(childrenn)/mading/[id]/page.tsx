@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { KesiswaanGetId , KesiswaanUpdate } from "@/app/api/kesiswaan";
+import { KesiswaanGetId, KesiswaanUpdate } from "@/app/api/kesiswaan";
 import { DataAbout } from "@/app/types/types";
 
 export default function EditMadingAdmin() {
@@ -14,19 +14,23 @@ export default function EditMadingAdmin() {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     setMounted(true);
     if (!id) return;
     KesiswaanGetId(id).then((res) => {
-        setData(res.data);
-        setPreview(`${process.env.NEXT_PUBLIC_BASEPICTURE}/storage/kesiswaan/${res.data.gambar}`);
+      setData(res.data);
+      setPreview(`${process.env.NEXT_PUBLIC_BASEPICTURE}/storage/kesiswaan/${res.data.gambar}`);
     });
   }, [id, router]);
+
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
     setFile(selectedFile);
   };
+
   useEffect(() => {
     if (!file) return;
     const url = URL.createObjectURL(file);
@@ -38,15 +42,21 @@ export default function EditMadingAdmin() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!data || !id) return;
+    if (!data || !id || loading) return;
+    setLoading(true);
+
     const target = e.target as typeof e.target & {
       judul: { value: string };
       desc: { value: string };
     };
+
     const formData = new FormData();
     formData.append("judul", target.judul.value || data.judul);
     if (file) formData.append("gambar", file);
+
     const result = await KesiswaanUpdate(id, formData);
+    setLoading(false);
+
     if (result.status) {
       alert("Mading updated successfully!");
       router.push("/admin/dashboard/mading");
@@ -54,6 +64,7 @@ export default function EditMadingAdmin() {
       alert(result.message || "Failed to update mading.");
     }
   };
+
   if (!mounted || !data) return null;
 
   return (
@@ -86,13 +97,12 @@ export default function EditMadingAdmin() {
           {preview ? (
             <div className="relative w-full min-h-52">
               <Image
-              className="object-cover object-center"
+                className="object-cover object-center"
                 key={preview}
                 src={preview}
                 alt="preview"
                 width={800}
                 height={800}
-
                 unoptimized
               />
             </div>
@@ -104,9 +114,12 @@ export default function EditMadingAdmin() {
         </span>
         <button
           type="submit"
-          className="w-[100px] h-10 px-4 py-3 text-white bg-blue-600 rounded flex items-center justify-center"
+          disabled={loading}
+          className={`w-[100px] h-10 px-4 py-3 rounded flex items-center justify-center text-white ${
+            loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600"
+          }`}
         >
-          Update
+          {loading ? "Updating..." : "Update"}
         </button>
       </form>
     </div>

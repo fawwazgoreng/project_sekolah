@@ -15,6 +15,7 @@ export default function EditBeritaAdmin() {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -23,7 +24,7 @@ export default function EditBeritaAdmin() {
     BeritaGetId(id).then((res) => {
       if (res.status) {
         setData(res.data);
-        setPreview(res.data.gambar || null); // set backend preview
+        setPreview(res.data.gambar || null);
       } else {
         alert("Data tidak ditemukan");
         router.push("/admin/dashboard/berita");
@@ -36,6 +37,7 @@ export default function EditBeritaAdmin() {
     if (!selectedFile) return;
     setFile(selectedFile);
   };
+
   useEffect(() => {
     if (!file) return;
     const url = URL.createObjectURL(file);
@@ -48,6 +50,8 @@ export default function EditBeritaAdmin() {
     e.preventDefault();
     if (!data || !id) return;
 
+    setIsSubmitting(true);
+
     const target = e.target as typeof e.target & {
       judul: { value: string };
       desc: { value: string };
@@ -58,13 +62,20 @@ export default function EditBeritaAdmin() {
     formData.append("deskripsi", target.desc.value || data.deskripsi);
     if (file) formData.append("gambar", file);
 
-    const result = await BeritaUpdate(id, formData);
+    try {
+      const result = await BeritaUpdate(id, formData);
 
-    if (result.status) {
-      alert("Berita updated successfully!");
-      router.push("/admin/dashboard/berita");
-    } else {
-      alert(result.message || "Failed to update berita. Check form errors.");
+      if (result.status) {
+        alert("Berita updated successfully!");
+        router.push("/admin/dashboard/berita");
+      } else {
+        alert(result.message || "Failed to update berita. Check form errors.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error saat update berita");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -105,7 +116,7 @@ export default function EditBeritaAdmin() {
           {preview ? (
             <div className="relative w-full h-[500px]">
               <Image
-                key={preview} // refresh Image component on preview change
+                key={preview}
                 src={preview}
                 alt="preview"
                 fill
@@ -136,9 +147,14 @@ export default function EditBeritaAdmin() {
         {/* Submit */}
         <button
           type="submit"
-          className="w-[100px] h-10 px-4 py-3 text-white bg-blue-600 rounded flex items-center justify-center"
+          disabled={isSubmitting}
+          className={`w-[120px] h-10 px-4 py-3 rounded flex items-center justify-center text-white ${
+            isSubmitting
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-700"
+          }`}
         >
-          Update
+          {isSubmitting ? "Updating..." : "Update"}
         </button>
       </form>
     </div>

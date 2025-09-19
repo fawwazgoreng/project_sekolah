@@ -19,7 +19,6 @@ export const authOptions: NextAuthOptions = {
               password: credentials?.password,
             }),
           });
-
           console.log("Laravel raw response:", res.status);
           const data = await res.json();
           console.log("Laravel response body:", data);

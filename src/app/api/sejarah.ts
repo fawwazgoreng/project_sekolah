@@ -35,12 +35,38 @@ export const SejarahEdit = async ({
       console.error("SejarahEdit failed:", text);
       return { status: false, message: "Failed to update", raw: text };
     }
-
     return await res.json();
   } catch (err) {
     console.error("SejarahEdit error:", err);
-    return { status: false, message: "Request error", raw: err };
   }
 };
 
 
+export const SejarahAdd = async ({
+  judul,
+  deskripsi,
+  gambar,
+}: {
+  judul: string;
+  deskripsi: string;
+  gambar?: File;
+}) => {
+  try {
+    const formData = new FormData();
+    formData.append("judul", judul);
+    formData.append("deskripsi", deskripsi);
+    if (gambar) formData.append("gambar", gambar);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/sejarah`, {
+      method: "POST",
+      body: formData,
+    });
+    if (!res.ok) {
+      const text = await res.text();
+      console.error("SejarahEdit failed:", text);
+      return { status: false, message: "Failed to update", raw: text };
+    }
+    return await res.json();
+  } catch (err) {
+    console.error("SejarahEdit error:", err);
+  }
+};

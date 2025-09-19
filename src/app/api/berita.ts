@@ -8,7 +8,9 @@ export async function BeritaGet() {
   return await res.json();
 }
 
-export async function BeritaGetId(id: number) :Promise<{data : DataAboutBerita}> {
+export async function BeritaGetId(id: number) :Promise<{
+  [x: string]: any;data : DataAboutBerita
+}> {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/berita/${id}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
@@ -25,7 +27,6 @@ export async function BeritaAdd(formData : FormData) {
     return await res.json();
   } catch (err) {
     console.error(err);
-    return { status: false, message: "Gagal menambahkan berita" };
   }
 }
 

@@ -15,7 +15,6 @@ import { DataAbout } from "./types/types";
 import { programsekolahGet } from "./api/programsekolah";
 
 
-
 export default function Home() {
   const [aboutGet, setAboutGet] = useState<DataAbout[]>([]);
   const [programGet, setProgramGet] = useState<DataAbout[]>([]);
@@ -30,7 +29,7 @@ export default function Home() {
       <div className="sm:left-[10%] bg-white rounded-md shadow-lg w-full sm:w-4/5 h-24 lg:h-32 flex absolute z-10 sm:top-[450px] top-80 md:top-[490px] lg:top-[650px]">
         <span className="w-11/12 flex mx-auto flex-nowrap items-center justify-between">
           <h3 className="sm:w-3/4 w-1/2 text-[17px] lg:text-[25px] text-hijau font-extrabold">Informasi Dan Pendaftaran Siswa Baru</h3>
-          <Link href={""} className="sm:w-1/4 w-40 h-1/2 flex bg-hijau p-2 rounded-lg items-center gap-2 justify-center text-white hover:bg-blue-500 duration-500">
+          <Link href={"https://wa.me/6285328160551?text=Halo%20saya%20ingin%20bertanya"} target="blabk" className="sm:w-1/4 w-40 h-1/2 flex bg-hijau p-2 rounded-lg items-center gap-2 justify-center text-white hover:bg-blue-500 duration-500">
             <Image className="w-8 lg:w-[44px]" src={Wa} alt="" width={800} height={800}></Image>
             <p className="text-[14px] md:text-[17px] lg:text-[21px]">Informasi</p>
           </Link>
@@ -43,7 +42,7 @@ export default function Home() {
             return (
               <div key={loop} className=" flex mx-auto flex-col md:flex-row justify-center w-4/5 lg:w-5/6 gap-10 items-center md:mt-11 ">
                 <div className=" w-full sm:w-2/3 md:w-[500px]  xl:w-[540px] lg:self-start">
-                  <Image width={800} height={800} className="  h-auto md:h-[265px] lg:h-auto  mt-10 rounded-lg  w-full" src={`${process.env.NEXT_PUBLIC_BASEURL}/${res.gambar}`} alt={res.gambar} />
+                  <Image width={800} height={800} className="  h-auto md:h-[265px] lg:h-auto  mt-10 rounded-lg  w-full" src={`${process.env.NEXT_PUBLIC_BASEPICTURE}/storage/${res.gambar}`} alt={res.gambar} />
                 </div>
                 <div className=" w-full sm:w-2/3 md:w-1/2 lg:w-1/3 md:self-start">
                   <article className="text-wrap w-full " >
@@ -51,7 +50,7 @@ export default function Home() {
                     <p className="font-bold lg:text-[35px] xl:text-[40px] lg:mt-2 md:text-[20px]">{res.judul}</p>
                     <p className="text-[13px] lg:text-[15px]">{res.deskripsi}</p>
                     <div className="flex lg:mt-4 mt-2">
-                      <Image className=" h-11 w-11" src={Warranty} alt="" width={800} height={800} />
+                      <Image className=" h-14 w-11" src={Warranty} alt="" width={800} height={800} />
                       <p className="mt-2">Accredited B</p>
                     </div>
                     <div className="bg-hijau mt-2 lg:mt-4 lg:w-40 w-32 rounded-lg text-center align-middle hover:bg-blue-500 duration-500 ">
@@ -89,31 +88,31 @@ export default function Home() {
       <div>
         <article className=" text-nowrap mt-10 w-4/5 flex mx-auto flex-col">
           <p className="text-[#00978F] font-bold ">WHY CHOOSE US</p>
-          <p className="font-extrabold text-[14px] md:text-[32px]">Mengapa memiliih SMK WIKRAMA 1 JEPARA?</p>
+          <p className="font-extrabold text-[14px] md:text-[32px]">Mengapa memiliih MTs Manahijul Ulum Plaosan?</p>
         </article>
         <div className=" md:mt-10 flex w-4/5 mx-auto mt-4 gap-30 justify-center flex-col lg:flex-row flex-wrap items-center gap-10">
           <div className="md:w-96 md:h-96 h-80 w-80 shadow-lg inset-shadow-xs rounded-lg  flex justify-center  flex-col items-center">
             <Image width={800} height={800} className="w-20 h-1w-20 mt-4" src={Laptop} alt="" />
             <article className="w-5/6 h-50 mt-4  text-wrap text-center">
-              <p className="leading-5">Sekolah kejurusan yang berfokus dalam perkembangan dunia teknologi  yang sejajar dengan perkembagan zaman</p>
+              <p className="leading-5">Fokus pada penguasaan IPTEK dan pembentukan akhlak karimah. Visi madrasah ini adalah melahirkan generasi yang menguasai ilmu pengetahuan dan teknologi (IPTEK), kompetitif, dan berakhlakul karimah. </p>
             </article>
           </div>
           <div className="md:w-96 md:h-96 h-80 w-80 shadow-lg inset-shadow-xs rounded-lg  flex justify-center  flex-col items-center">
             <Image width={800} height={800} className="w-20 h-1w-20 mt-4 " src={Graduation} alt="" />
             <article className="w-5/6 h-50 mt-4  text-wrap text-center">
-              <p className="leading-5">Sekolah kejurusan yang mengamalkan nilai sosial , nilai moral dan mengamalkan pancasila dalam kehidupan sehari hari</p>
+              <p className="leading-5">Integrasi kurikulum agama dan umum yang seimbang. Sebagai madrasah, MTs Manahijul Ulum mengintegrasikan kurikulum dari Kementerian Agama dan mata pelajaran umum yang setara dengan sekolah menengah pertama.</p>
             </article>
           </div>
           <div className="md:w-96 md:h-96 h-80 w-80 mt-20 shadow-lg inset-shadow-xs rounded-lg  flex justify-center  flex-col items-center">
             <Image width={800} height={800} className="w-20 h-1w-20 mt-4" src={Factory} alt="" />
             <article className="w-5/6 h-50 mt-4  text-wrap text-center">
-              <p className="leading-5">sekolah yang memiliki model pembelajaran berbasis industri yang menggabungkan teori dan praktik di lingkungan kerja yang sebenarnya, bertujuan untuk menghasilkan lulusan yang kompeten sesuai dengan kebutuhan dunia industri.</p>
+              <p className="leading-5">Terdapat manajemen yang baik untuk meningkatkan motivasi belajar. Sebuah penelitian yang menjadikan MTs Manahijul Ulum sebagai objek studi menunjukkan bahwa manajemen kepala madrasah berhasil meningkatkan motivasi belajar siswa, khususnya dalam mata pelajaran agama Islam.</p>
             </article>
           </div>
           <div className="md:w-96 md:h-96 h-80 w-80 mt-20 shadow-lg inset-shadow-xs rounded-lg  flex justify-center  flex-col items-center">
             <Image width={800} height={800} className="w-20 h-1w-20 mt-4 " src={Stairs} alt="" />
             <article className="w-5/6 h-50 mt-4  text-wrap text-center">
-              <p className="leading-5">Lulusan SMK Wikrama memiliki berbagai pilihan karir yang sesuai dengan keahlian yang mereka kuasai, mulai dari bekerja di perusahaan hingga menjadi wirausaha</p>
+              <p className="leading-5">Pengembangan kompetensi dan daya saing. Salah satu visi MTs Manahijul Ulum adalah menciptakan lulusan yang kompetitif. Ini berarti madrasah ini berupaya membekali siswa dengan keterampilan dan kemampuan yang dibutuhkan untuk bersaing dalam dunia kerja yang kompetitif</p>
             </article>
           </div>
         </div>

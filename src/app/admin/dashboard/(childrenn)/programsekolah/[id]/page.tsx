@@ -15,7 +15,7 @@ export default function EditProgramSekolah() {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -24,7 +24,6 @@ export default function EditProgramSekolah() {
     programsekolahGetId(id).then((res) => {
       if (res.status) {
         setData(res.data);
-        // gambar dari backend
         if (res.data.gambar) {
           setPreview(`${process.env.NEXT_PUBLIC_BASEPICTURE}/storage/programsekolah/${res.data.gambar}`);
         }
@@ -41,12 +40,10 @@ export default function EditProgramSekolah() {
 
     setFile(selectedFile);
 
-    // buat object URL
     const objectUrl = URL.createObjectURL(selectedFile);
     setPreview(objectUrl);
   };
 
-  // cleanup URL agar tidak bocor
   useEffect(() => {
     return () => {
       if (preview && preview.startsWith("blob:")) {
@@ -55,10 +52,11 @@ export default function EditProgramSekolah() {
     };
   }, [preview]);
 
-  // Handle form submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!data || !id) return;
+    if (!data || !id || isSubmitting) return;
+
+    setIsSubmitting(true);
 
     const target = e.target as typeof e.target & {
       judul: { value: string };
@@ -76,7 +74,8 @@ export default function EditProgramSekolah() {
       alert("Program Sekolah berhasil diupdate!");
       router.push("/admin/dashboard/programsekolah");
     } else {
-      alert(result.message || "Gagal update Program Sekolah. Cek kembali form.");
+      alert("Gagal update Program Sekolah. Cek kembali form.");
+      setIsSubmitting(false);
     }
   };
 
@@ -85,11 +84,8 @@ export default function EditProgramSekolah() {
   return (
     <div className="w-5/6 mx-auto flex flex-col gap-5">
       <form onSubmit={handleSubmit} className="flex flex-col gap-7 w-full">
-        {/* Judul */}
         <span className="flex flex-col gap-2">
-          <label htmlFor="judul" className="text-2xl font-bold">
-            Judul
-          </label>
+          <label htmlFor="judul" className="text-2xl font-bold">Judul</label>
           <input
             id="judul"
             name="judul"
@@ -99,7 +95,6 @@ export default function EditProgramSekolah() {
           />
         </span>
 
-        {/* Gambar */}
         <span className="flex flex-col gap-2">
           <label
             htmlFor="gambar"
@@ -133,11 +128,8 @@ export default function EditProgramSekolah() {
           )}
         </span>
 
-        {/* Description */}
         <span className="flex flex-col gap-2">
-          <label htmlFor="desc" className="text-2xl font-bold">
-            Description
-          </label>
+          <label htmlFor="desc" className="text-2xl font-bold">Description</label>
           <textarea
             id="desc"
             name="desc"
@@ -146,12 +138,14 @@ export default function EditProgramSekolah() {
           />
         </span>
 
-        {/* Submit */}
         <button
           type="submit"
-          className="w-[100px] h-10 px-4 py-3 text-white bg-blue-600 rounded flex items-center justify-center"
+          disabled={isSubmitting}
+          className={`w-[100px] h-10 px-4 py-3 text-white rounded flex items-center justify-center ${
+            isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600"
+          }`}
         >
-          Update
+          {isSubmitting ? "Updating..." : "Update"}
         </button>
       </form>
     </div>

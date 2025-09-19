@@ -35,3 +35,19 @@ export async function VisimisiEdit(payload: {
   ).then((res) => res.json());
   return response;
 }
+
+export async function VisimisiAdd(payload: {
+  visi: string;
+  misi: string;
+  moto: string;
+}) {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BASEURL}/visimisi`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    }
+  ).then((res) => res.json());
+  return response;
+}

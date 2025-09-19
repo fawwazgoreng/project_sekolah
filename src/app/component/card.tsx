@@ -47,16 +47,22 @@ export const Card: React.FC<Props> = ({ Arrow }) => {
 
     return (
         <>
-            <Slider {...settings} className="w-full overflow-hidden">
-                {data.map((res, loop) => {
-                    return (
-                        <div key={loop + 1} className="w-full lg:h-[550px] h-64 sm:h-96 overflow-hidden">
-                            <div className="w-full lg:h-[550px] h-64 sm:h-96 overflow-hidden bg-black absolute z-10 opacity-5"></div>
-                            <Image className="w-full h-full  infiniteScales relative object-cover object-center " src={`${process.env.NEXT_PUBLIC_BASEPICTURE}/storage/slide/${res.gambar}`} alt={`${res.gambar}`} width={2000} height={2000}></Image>
-                        </div>
-                    )
-                })}
-            </Slider>
+            {data ? (
+                <Slider {...settings} className="w-full overflow-hidden">
+                    {data.map((res, loop) => {
+                        return (
+                            <div key={loop + 1} className="w-full lg:h-[550px] h-64 sm:h-96 overflow-hidden">
+                                <div className="w-full lg:h-[550px] h-64 sm:h-96 overflow-hidden bg-black absolute z-10 opacity-5"></div>
+                                <Image className="w-full h-full  infiniteScales relative object-cover object-center " src={`${process.env.NEXT_PUBLIC_BASEPICTURE}/storage/slide/${res.gambar}`} alt={`${res.gambar}`} width={2000} height={2000}></Image>
+                            </div>
+                        )
+                    })}
+                </Slider>
+            ) : (
+                <div className="bg-hijau opacity-80 w-full lg:h-[550px] h-64 sm:h-96 overflow-hidden">
+                    <div className="w-full lg:h-[550px] h-64 sm:h-96 overflow-hidden bg-black absolute z-10 opacity-5"></div>
+                </div>
+            )}
         </>
     );
 }

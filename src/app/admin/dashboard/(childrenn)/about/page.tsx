@@ -2,32 +2,40 @@
 
 import Image from "next/image";
 import { useEffect, useState, ChangeEvent } from "react";
-import { SejarahGet, SejarahEdit, SejarahAdd } from "@/app/api/sejarah";
+import { AboutGet, AboutEdit, AboutAdd } from "@/app/api/about";
 import { DataAbout } from "@/app/types/types";
 
-export default function SejarahAdmin() {
+export default function AboutAdmin() {
   const [data, setData] = useState<DataAbout[]>([]);
   const [previewImages, setPreviewImages] = useState<{ [key: number]: string }>({});
   const [newData, setNewData] = useState<{ judul: string; deskripsi: string; gambar?: File }>({
     judul: "",
     deskripsi: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loadingId, setLoadingId] = useState<number | null>(null); // track edit / upload
+  const [isSaving, setIsSaving] = useState(false); // track create new
 
   useEffect(() => {
-    SejarahGet()
+    AboutGet()
       .then((res) => setData(res.data))
       .catch((err) => console.error(err));
   }, []);
 
-  const handleEdit = async (id: number, newJudul?: string, newDeskripsi?: string, newFile?: File) => {
+  const handleEdit = async (
+    id: number,
+    newJudul?: string,
+    newDeskripsi?: string,
+    newFile?: File
+  ) => {
     const item = data.find((d) => d.id === id);
     if (!item) return;
     const judul = newJudul ?? item.judul;
     const deskripsi = newDeskripsi ?? item.deskripsi;
+
     try {
-      const res = await SejarahEdit({ id, judul, deskripsi, gambar: newFile });
-      if (!res.status) throw new Error("Gagal update sejarah");
+      setLoadingId(id);
+      const res = await AboutEdit({ id, judul, deskripsi, gambar: newFile });
+      if (!res.status) throw new Error("Gagal update about sekolah");
       setData((prev) =>
         prev.map((d) =>
           d.id === id ? { ...d, judul, deskripsi, gambar: res.data.gambar || d.gambar } : d
@@ -42,6 +50,8 @@ export default function SejarahAdmin() {
       }
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoadingId(null);
     }
   };
 
@@ -52,10 +62,12 @@ export default function SejarahAdmin() {
     setPreviewImages((prev) => ({ ...prev, [id]: previewUrl }));
     const item = data.find((d) => d.id === id);
     if (!item) return;
+
     try {
-      const res = await SejarahEdit({ id, judul: item.judul, deskripsi: item.deskripsi, gambar: file });
+      setLoadingId(id);
+      const res = await AboutEdit({ id, judul: item.judul, deskripsi: item.deskripsi, gambar: file });
       if (res.status) {
-        alert("Berhasil update sejarah");
+        alert("Berhasil update about sekolah");
         setData((prev) =>
           prev.map((d) => (d.id === id ? { ...d, gambar: res.data.gambar || d.gambar } : d))
         );
@@ -66,10 +78,12 @@ export default function SejarahAdmin() {
           return newPrev;
         });
       } else {
-        console.error("Gagal update sejarah");
+        console.error("Gagal update about sekolah");
       }
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoadingId(null);
     }
   };
 
@@ -78,39 +92,39 @@ export default function SejarahAdmin() {
       alert("Semua data harus diisi.");
       return;
     }
-    if (isSubmitting) return;
-    setIsSubmitting(true);
+    setIsSaving(true);
     try {
-      const res = await SejarahAdd({
+      const res = await AboutAdd({
         judul: newData.judul,
         deskripsi: newData.deskripsi,
         gambar: newData.gambar,
       });
       if (res.status) {
-        alert("Berhasil menambahkan sejarah");
+        alert("Berhasil menambahkan about sekolah");
         setData([res.data]);
         setNewData({ judul: "", deskripsi: "" });
       } else {
-        alert("Gagal menambahkan sejarah");
+        alert("Gagal menambahkan about sekolah");
       }
     } catch (err) {
       console.error(err);
     } finally {
-      setIsSubmitting(false);
+      setIsSaving(false);
     }
   };
 
   return (
     <div className="w-full h-full flex flex-col justify-center p-4">
-      <h1 className="text-hijau text-4xl font-bold mb-6">Sejarah</h1>
+      <h1 className="text-hijau text-4xl font-bold mb-6">About our school</h1>
       {data.length > 0 ? (
         data.map((res) => (
           <div key={res.id} className="mb-8">
             <input
               type="text"
               defaultValue={res.judul}
+              disabled={loadingId === res.id}
               onBlur={(e) => handleEdit(res.id, e.target.value, res.deskripsi)}
-              className="p-2 my-3 text-2xl text-hijau font-bold w-full border border-gray-300 rounded"
+              className="p-2 my-3 text-2xl text-hijau font-bold w-full border border-gray-300 rounded disabled:bg-gray-100"
             />
             <div className="flex flex-col lg:flex-row gap-4 shadow-lg rounded-md p-4">
               <div className="w-full lg:w-1/2 h-96 relative rounded-md overflow-hidden">
@@ -130,15 +144,17 @@ export default function SejarahAdmin() {
                 <input
                   type="file"
                   accept="image/*"
+                  disabled={loadingId === res.id}
                   onChange={(e) => handleFileChange(res.id, e)}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
                 />
               </div>
               <textarea
                 defaultValue={res.deskripsi}
+                disabled={loadingId === res.id}
                 onBlur={(e) => handleEdit(res.id, res.judul, e.target.value)}
-                placeholder="Sejarah sekolah..."
-                className="p-2 w-full min-h-40 text-[15px] md:text-[20px] text-black font-light shadow-inner rounded resize-none border border-gray-300"
+                placeholder="about sekolah..."
+                className="p-2 w-full min-h-40 text-[15px] md:text-[20px] text-black font-light shadow-inner rounded resize-none border border-gray-300 disabled:bg-gray-100"
               />
             </div>
           </div>
@@ -149,7 +165,7 @@ export default function SejarahAdmin() {
             type="text"
             value={newData.judul}
             onChange={(e) => setNewData((prev) => ({ ...prev, judul: e.target.value }))}
-            placeholder="Nama sekolah"
+            placeholder="Nama Sekolah"
             className="p-2 my-3 text-2xl text-hijau font-bold w-full border border-gray-300 rounded"
           />
           <div className="flex flex-col lg:flex-row gap-4 shadow-lg rounded-md p-4">
@@ -179,18 +195,18 @@ export default function SejarahAdmin() {
             <textarea
               value={newData.deskripsi}
               onChange={(e) => setNewData((prev) => ({ ...prev, deskripsi: e.target.value }))}
-              placeholder="Deskripsi sejarah sekolah..."
+              placeholder="Deskripsi sekolah..."
               className="p-2 w-full min-h-40 text-[15px] md:text-[20px] text-black font-light shadow-inner rounded resize-none border border-gray-300"
             />
           </div>
           <button
             onClick={handleCreateNew}
-            disabled={isSubmitting}
+            disabled={isSaving}
             className={`mt-4 px-6 py-2 rounded text-white ${
-              isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+              isSaving ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
             }`}
           >
-            {isSubmitting ? "Menyimpan..." : "Simpan Sejarah Baru"}
+            {isSaving ? "Menyimpan..." : "Simpan About school"}
           </button>
         </div>
       )}

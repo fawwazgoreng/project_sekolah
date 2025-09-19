@@ -14,7 +14,7 @@ export async function PrestasiAdd(props: { title: string; picture: File; desc: s
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/prestasi`, {
     method: "POST",
-    body: formData, 
+    body: formData,
   });
 
   return await res.json();

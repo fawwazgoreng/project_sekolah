@@ -10,6 +10,8 @@ import {
   AboutFasilitasGetid,
 } from "@/app/api/about";
 import { DataAbout } from "@/app/types/types";
+import { ChevronRight, ChevronLeft } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function DashboardAboutPage() {
   const [preview, setPreview] = useState<string | null>(null);
@@ -20,8 +22,19 @@ export default function DashboardAboutPage() {
   const [idEdit, setIdEdit] = useState<number>(0);
   const [popupActive, setPopupActive] = useState(false);
   const [popupEditActive, setPopupEditActive] = useState(false);
+  const [ITEMS_PER_PAGE, setItemsPage] = useState(6);
+  const [loadingAdd, setLoadingAdd] = useState(false);
+  const [loadingEdit, setLoadingEdit] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState<number | null>(null);
 
-  // Fetch data
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const currentPage = parseInt(searchParams.get("page") || "1");
+  const totalPages = Math.ceil(fasilitas.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const currentData = fasilitas.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
   useEffect(() => {
     AboutFasilitasGet()
       .then((res) => setFasilitas(res.data))
@@ -37,90 +50,123 @@ export default function DashboardAboutPage() {
   useEffect(() => {
     if (popupEditActive && fasilitasEdit) {
       setNama(fasilitasEdit.judul);
-      setPreview(`${process.env.NEXT_PUBLIC_BASEPICTURE}/storage/${fasilitasEdit.gambar}`);
+      setPreview(
+        `${process.env.NEXT_PUBLIC_BASEPICTURE}/storage/${fasilitasEdit.gambar}`
+      );
     }
   }, [popupEditActive, fasilitasEdit]);
+
+  useEffect(() => {
+    const updateItemsPerPage = () => {
+      const width = window.innerWidth;
+      if (width < 640) setItemsPage(2);
+      else if (width < 1024) setItemsPage(4);
+      else setItemsPage(6);
+    };
+    updateItemsPerPage();
+    window.addEventListener("resize", updateItemsPerPage);
+    return () => window.removeEventListener("resize", updateItemsPerPage);
+  }, []);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
       setFile(selectedFile);
-      setPreview(URL.createObjectURL(selectedFile));
+      const objectUrl = URL.createObjectURL(selectedFile);
+      setPreview(objectUrl);
+      return () => URL.revokeObjectURL(objectUrl);
     }
   };
 
   const handleAddSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const name = (e.currentTarget.elements.namedItem("nama") as HTMLInputElement).value;
-    if (!file) return alert("Please select a file!");
-    const response = await AboutFasilitasAdd({ name, picture: file });
-    if (response.status) {
-      alert("Upload berhasil!");
-      setFile(null);
-      setPreview(null);
-      setNama("");
-      setPopupActive(false);
-      AboutFasilitasGet().then((res) => setFasilitas(res.data));
-    } else {
-      alert("Upload gagal!");
+    if (!nama.trim()) return alert("Nama tidak boleh kosong!");
+    if (!file) return alert("Silakan pilih gambar!");
+    setLoadingAdd(true);
+    try {
+      const response = await AboutFasilitasAdd({ name: nama, picture: file });
+      if (response.status) {
+        alert("Upload berhasil!");
+        setFile(null);
+        setPreview(null);
+        setNama("");
+        setPopupActive(false);
+        AboutFasilitasGet().then((res) => setFasilitas(res.data));
+      } else {
+        alert("Gagal menambahkan fasilitas");
+      }
+    } finally {
+      setLoadingAdd(false);
     }
   };
+
   const handleEditSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!fasilitasEdit) return;
-
-    const judul = (e.currentTarget.elements.namedItem("nama") as HTMLInputElement).value;
-
-    const gambar = file ? file : null;
-
-    const response = await AboutFasilitasEdit({
-      id: fasilitasEdit.id,
-      judul,
-      gambar,
-    });
-    if (response.status) {
-      alert("Edit berhasil!");
-      setFile(null);
-      setPreview(null);
-      setNama("");
-      setPopupEditActive(false);
-      AboutFasilitasGet().then((res) => setFasilitas(res.data));
-    } else {
-      alert("Edit gagal!");
+    if (!nama.trim()) return alert("Nama tidak boleh kosong!");
+    setLoadingEdit(true);
+    try {
+      const response = await AboutFasilitasEdit({
+        id: fasilitasEdit.id,
+        judul: nama,
+        gambar: file ? file : null,
+      });
+      if (response.status) {
+        alert("Update fasilitas berhasil!");
+        setFile(null);
+        setPreview(null);
+        setNama("");
+        setPopupEditActive(false);
+        AboutFasilitasGet().then((res) => setFasilitas(res.data));
+      } else {
+        alert("Update fasilitas gagal!");
+      }
+    } finally {
+      setLoadingEdit(false);
     }
   };
 
-
   const handleDelete = async (id: number) => {
+    if (!confirm("Apakah yakin ingin menghapus?")) return;
+    setLoadingDelete(id);
     try {
-      await AboutFasilitasDelete( id )
-        .then(() => {
-          window.location.reload()
-        });
-    } catch (err) {
-      console.error(err);
+      await AboutFasilitasDelete(id);
+      setFasilitas((prev) => prev.filter((item) => item.id !== id));
+      alert("Berhasil menghapus fasilitas");
+    } catch {
+      alert("Gagal menghapus fasilitas");
+    } finally {
+      setLoadingDelete(null);
     }
+  };
+
+  const goToPage = (page: number) => {
+    router.replace(`?page=${page}`);
   };
 
   return (
     <>
       {popupActive && (
-        <div className={`fixed inset-0 bg-slate-300 ${popupActive ? "block" : "hidden"}`}>
+        <div
+          className="fixed inset-0 bg-black/40 flex justify-center items-center z-20"
+          onClick={() => setPopupActive(false)}
+        >
           <form
+            onClick={(e) => e.stopPropagation()}
             onSubmit={handleAddSubmit}
-            className={`flex flex-col p-3 gap-3  ${popupActive ? "block" : "hidden"} fixed bg-slate-50 w-auto h-auto left-[10%] right-[10%] top-[5%] bottom-[5%] rounded-lg z-20`}
+            className="flex flex-col p-3 gap-3 bg-slate-50 w-auto h-auto max-w-lg rounded-lg relative"
           >
             <button
               type="button"
-              className="absolute top-3 right-3 w-10 h-10 z-50"
+              className="absolute top-3 right-3 w-10 h-10"
               onClick={() => setPopupActive(false)}
             >
-              <span className="relative w-full h-full">
-                <span className="absolute w-7 h-0.5 bg-black rotate-45"></span>
-                <span className="absolute w-7 h-0.5 bg-black -rotate-45"></span>
-              </span>
+              ✕
             </button>
-            <label htmlFor="nama" className="mt-4">Nama</label>
+            <h1 className="text-2xl font-bold text-center">Tambah Fasilitas</h1>
+            <label htmlFor="nama" className="mt-4">
+              Nama
+            </label>
             <input
               type="text"
               id="nama"
@@ -150,70 +196,92 @@ export default function DashboardAboutPage() {
                 className="w-full min-h-96 max-h-[500px] object-cover object-center"
               />
             ) : (
-              <div className="w-full min-h-96 max-h-[500px] bg-gray-200 object-cover object-center" />
+              <div className="w-full min-h-96 max-h-[500px] bg-gray-200" />
             )}
             <button
               type="submit"
-              className="text-white cursor-pointer w-48 rounded-xl px-3 py-2 text-xl font-bold bg-blue-600 text-center"
+              disabled={loadingAdd}
+              className={`text-white cursor-pointer w-48 rounded-xl px-3 py-2 text-xl font-bold text-center ${
+                loadingAdd ? "bg-gray-400" : "bg-blue-600"
+              }`}
             >
-              Submit
+              {loadingAdd ? "Loading..." : "Submit"}
             </button>
           </form>
         </div>
       )}
-      {popupEditActive ? (
-        fasilitasEdit ? (
-          <div className="fixed inset-0 bg-slate-300 z-10">
-            <form onSubmit={handleEditSubmit} className="flex flex-col p-3 gap-3 fixed bg-slate-50 w-auto h-auto left-[10%] right-[10%] top-[5%] bottom-[5%] rounded-lg z-20">
-              <button
-                type="button"
-                className="absolute top-3 right-3 w-10 h-10 z-50"
-                onClick={() => setPopupEditActive(false)}
-              >
-                X
-              </button>
-              <label htmlFor="nama" className="mt-4">Nama</label>
-              <input
-                type="text"
-                id="nama"
-                name="nama"
-                defaultValue={fasilitasEdit.judul}
-                className="w-full bg-slate-300 border-none outline-none rounded-md p-2"
-              />
-              <label htmlFor="gambar" className="text-white cursor-pointer w-56 rounded-xl px-3 py-2 text-xl font-bold bg-blue-600 text-center">
-                Edit Gambar
-              </label>
-              <input type="file" id="gambar" name="gambar" onChange={handleFileChange} className="hidden" />
-              {preview ? (
-                <Image
-                  src={preview}
-                  alt="Preview"
-                  width={2000}
-                  height={2000}
-                  className="w-full min-h-96 max-h-[500px] object-cover object-center"
-                />
-              ) : (
-                <Image
-                  src={`${process.env.NEXT_PUBLIC_BASEPICTURE}/storage/${fasilitasEdit.gambar}`}
-                  alt={fasilitasEdit.gambar}
-                  width={2000}
-                  height={2000}
-                  className="w-full min-h-96 max-h-[500px] object-cover object-center"
-                />
-              )}
 
-              <button
-                type="submit"
-                className="text-white cursor-pointer w-48 rounded-xl px-3 py-2 text-xl font-bold bg-blue-600 text-center"
-              >
-                Submit
-              </button>
-            </form>
-          </div>
-        ) : (
-          console.log("gagal")
-        )
-      ) : null}
+      {popupEditActive && fasilitasEdit && (
+        <div
+          className="fixed inset-0 bg-black/40 flex justify-center items-center z-20"
+          onClick={() => setPopupEditActive(false)}
+        >
+          <form
+            onClick={(e) => e.stopPropagation()}
+            onSubmit={handleEditSubmit}
+            className="flex flex-col p-3 gap-3 bg-slate-50 w-auto h-auto max-w-lg rounded-lg relative"
+          >
+            <button
+              type="button"
+              className="absolute top-3 right-3 w-10 h-10"
+              onClick={() => setPopupEditActive(false)}
+            >
+              ✕
+            </button>
+            <h1 className="text-2xl font-bold text-center">Edit Fasilitas</h1>
+            <label htmlFor="nama" className="mt-4">
+              Nama
+            </label>
+            <input
+              type="text"
+              id="nama"
+              name="nama"
+              value={nama}
+              onChange={(e) => setNama(e.target.value)}
+              className="w-full bg-slate-300 border-none outline-none rounded-md p-2"
+            />
+            <label
+              htmlFor="gambar"
+              className="text-white cursor-pointer w-56 rounded-xl px-3 py-2 text-xl font-bold bg-blue-600 text-center"
+            >
+              Edit Gambar
+            </label>
+            <input
+              type="file"
+              id="gambar"
+              name="gambar"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+            {preview ? (
+              <Image
+                src={preview}
+                alt="Preview"
+                width={2000}
+                height={2000}
+                className="w-full min-h-96 max-h-[500px] object-cover object-center"
+              />
+            ) : (
+              <Image
+                src={`${process.env.NEXT_PUBLIC_BASEPICTURE}/storage/${fasilitasEdit.gambar}`}
+                alt={fasilitasEdit.gambar}
+                width={2000}
+                height={2000}
+                className="w-full min-h-96 max-h-[500px] object-cover object-center"
+              />
+            )}
+            <button
+              type="submit"
+              disabled={loadingEdit}
+              className={`text-white cursor-pointer w-48 rounded-xl px-3 py-2 text-xl font-bold text-center ${
+                loadingEdit ? "bg-gray-400" : "bg-blue-600"
+              }`}
+            >
+              {loadingEdit ? "Loading..." : "Submit"}
+            </button>
+          </form>
+        </div>
+      )}
 
       <div className="flex flex-col gap-10 w-11/12 mx-auto mt-10">
         <h1 className="text-hijau text-4xl font-bold">Fasilitas</h1>
@@ -225,10 +293,53 @@ export default function DashboardAboutPage() {
             Tambah
           </button>
         </div>
+        {totalPages > 1 && (
+          <div className="flex justify-center mt-10 gap-2 flex-wrap">
+            <button
+              onClick={() => goToPage(currentPage - 1)}
+              disabled={currentPage === 1}
+              className={`px-2 py-1 bg-gray-300 rounded hover:bg-teal-600 ${
+                currentPage === 1 ? "opacity-50 hover:bg-gray-300" : ""
+              }`}
+            >
+              <ChevronLeft className="h-6 w-6 flex mx-auto mt-1 text-gray-800" />
+            </button>
+            {[...Array(totalPages)].map((_, index) => {
+              const page = index + 1;
+              return (
+                <button
+                  key={page}
+                  onClick={() => goToPage(page)}
+                  className={`px-3 py-1 rounded ${
+                    currentPage === page
+                      ? "bg-blue-600 text-white font-bold"
+                      : "bg-gray-300 hover:bg-teal-600 "
+                  }`}
+                >
+                  {page}
+                </button>
+              );
+            })}
+            <button
+              onClick={() => goToPage(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className={`px-2 py-1 bg-gray-300 rounded hover:bg-teal-600 ${
+                currentPage === totalPages
+                  ? "opacity-50 hover:bg-gray-300"
+                  : ""
+              }`}
+            >
+              <ChevronRight className="h-6 w-6 flex mx-auto mt-1 text-gray-800" />
+            </button>
+          </div>
+        )}
         <div className="w-full flex flex-col justify-between gap-10">
           <div className="w-full flex flex-wrap justify-around items-center gap-y-7">
-            {fasilitas.map((item) => (
-              <div key={item.id} className="group w-full lg:w-[45%] flex flex-col mx-auto items-start">
+            {currentData.map((item) => (
+              <div
+                key={item.id}
+                className="group w-full lg:w-[45%] flex flex-col mx-auto items-start"
+              >
                 <span className="inline-block overflow-hidden rounded-md w-full md:max-w-[900px] xl:h-72 h-56">
                   <Image
                     src={`${process.env.NEXT_PUBLIC_BASEPICTURE}/storage/${item.gambar}`}
@@ -240,10 +351,10 @@ export default function DashboardAboutPage() {
                   />
                 </span>
                 <span className="w-full flex justify-between py-5">
-                  <h1 className="text-2xl h-[72px] line-clamp-3 text-hijau font-bold group-hover:translate-x-4 group-hover:scale-105 duration-300">
+                  <h1 className="text-2xl h-[72px] line-clamp-3 text-hijau font-bold duration-300">
                     {item.judul}
                   </h1>
-                  <span className="flex justify-center gap-5">
+                  <span className="flex justify-center items-start gap-5">
                     <button
                       onClick={() => {
                         setIdEdit(item.id);
@@ -255,9 +366,14 @@ export default function DashboardAboutPage() {
                     </button>
                     <button
                       onClick={() => handleDelete(item.id)}
-                      className="py-2 px-4 bg-red-600 rounded-md w-20 text-white font-bold"
+                      disabled={loadingDelete === item.id}
+                      className={`py-2 px-4 rounded-md w-20 text-white font-bold ${
+                        loadingDelete === item.id
+                          ? "bg-gray-400"
+                          : "bg-red-600"
+                      }`}
                     >
-                      Hapus
+                      {loadingDelete === item.id ? "..." : "Hapus"}
                     </button>
                   </span>
                 </span>

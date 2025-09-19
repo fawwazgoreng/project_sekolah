@@ -20,7 +20,7 @@ export const UploadPage = () => {
     try {
       const res = await SlideAdd(formData);
 
-      if (res.status) { // <-- pakai status dari backend (true/false)
+      if (res.status) { 
         alert('File berhasil diupload!');
         window.location.reload();
       } else {

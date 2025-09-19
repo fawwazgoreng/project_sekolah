@@ -1,31 +1,74 @@
 export async function AboutGet() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/about`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/about`, {
     method: "GET",
-    headers: { "Accept": "application/json" },
+    headers: { "Content-Type": "application/json" },
   });
-  return res.json();
+  return response.json();
 }
 
-export async function AboutAdd(props: { name: string; picture: File }) {
-  const formData = new FormData();
-  formData.append("judul", props.name);
-  formData.append("gambar", props.picture);
+export const AboutEdit = async ({
+  id,
+  judul,
+  deskripsi,
+  gambar,
+}: {
+  id: number;
+  judul: string;
+  deskripsi: string;
+  gambar?: File;
+}) => {
+  try {
+    const formData = new FormData();
+    formData.append("judul", judul);
+    formData.append("deskripsi", deskripsi);
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/about`, {
-    method: "POST",
-    body: formData,
-  });
+    formData.append("_method", "PUT");
 
-  return { ok: res.ok, status: res.status, data: await res.json() };
-}
+    if (gambar) formData.append("gambar", gambar);
 
-export async function AboutDelete(id: number) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/about/${id}`, {
-    method: "DELETE",
-    headers: { "Accept": "application/json" },
-  });
-  return res.json();
-}
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/about/${id}`, {
+      method: "POST",
+      body: formData,
+    });
+    if (!res.ok) {
+      const text = await res.text();
+      console.error("aboutEdit failed:", text);
+      return { status: false, message: "Failed to update", raw: text };
+    }
+    return await res.json();
+  } catch (err) {
+    console.error("about Edit error:", err);
+  }
+};
+
+export const AboutAdd = async ({
+  judul,
+  deskripsi,
+  gambar,
+}: {
+  judul: string;
+  deskripsi: string;
+  gambar?: File;
+}) => {
+  try {
+    const formData = new FormData();
+    formData.append("judul", judul);
+    formData.append("deskripsi", deskripsi);
+    if (gambar) formData.append("gambar", gambar);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/about`, {
+      method: "POST",
+      body: formData,
+    });
+    if (!res.ok) {
+      const text = await res.text();
+      console.error("aboutEdit failed:", text);
+      return { status: false, message: "Failed to update", raw: text };
+    }
+    return await res.json();
+  } catch (err) {
+    console.error("aboutEdit error:", err);
+  }
+};
 
 export async function AboutFasilitasGet() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/fasilitas`, { method: "GET", headers: { "Accept": "application/json" }});

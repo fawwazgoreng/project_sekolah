@@ -28,7 +28,7 @@ export default function RootLayout({
                 <SessionProvider>
                     <div className="flex md:flex-row flex-col h-screen overflow-hidden bg-second">
                         {/* Sidebar */}
-                        <div className="md:w-48 w-full min-h-14 bg-hijau text-white overflow-y-auto">
+                        <div className="md:w-48 w-full min-h-14  bg-hijau text-white overflow-y-auto">
                             <NavBarAdmin />
                         </div>
                         {/* Main Content */}
