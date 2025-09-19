@@ -34,7 +34,7 @@ class KesiswaanController extends Controller
         // ketentuan valuenya
         $rules = [
             'judul' => 'required',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png',
         ];
         // validator manual jika gagal tambah
         $validator = Validator::make($request->all(), $rules);
@@ -102,7 +102,7 @@ class KesiswaanController extends Controller
         // ketentuan value data
         $rules = [
             'judul' => 'required',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png',
         ];
 
         // validator jika gagal

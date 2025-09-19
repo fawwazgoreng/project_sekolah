@@ -31,7 +31,7 @@ class SlideController extends Controller
     {
         // Validasi file
         $request->validate([
-            'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
         ]);
 
         $path = $request->file('gambar')->store('slide', 'public');

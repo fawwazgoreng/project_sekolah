@@ -31,7 +31,7 @@ class PrestasiController extends Controller
         $rules = [
             'judul' => 'required|string|max:255',
             'deskripsi' => 'required|string',
-            'gambar' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'gambar' => 'required|image|mimes:jpg,jpeg,png,gif',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -93,7 +93,7 @@ class PrestasiController extends Controller
         $rules = [
             'judul' => 'required|string|max:255',
             'deskripsi' => 'required|string',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png,gif',
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {

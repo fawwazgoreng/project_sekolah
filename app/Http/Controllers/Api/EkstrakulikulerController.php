@@ -30,7 +30,7 @@ class EkstrakulikulerController extends Controller
     {
         $rules = [
             'judul' => 'required|string|max:255',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // validasi file image
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif',
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
@@ -88,7 +88,7 @@ class EkstrakulikulerController extends Controller
         }
         $rules = [
             'judul' => 'required|string|max:255',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif',
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {

@@ -30,7 +30,7 @@ class FasilitasController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'judul' => 'required|string|max:255',
-            'gambar' => 'required|image|max:2048', // validate file
+            'gambar' => 'required|image',
         ]);
 
         if ($validator->fails()) {

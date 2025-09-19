@@ -4,18 +4,17 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\About;
+use App\Models\Admin;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Contracts\Service\Attribute\Required;
 
 class AboutController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index()
     {
-        // tampilkan semua data
         $data = About::orderBy('created_at', 'desc')->get();
         return response()->json([
             'status' => true,
@@ -23,54 +22,39 @@ class AboutController extends Controller
             'data' => $data,
         ]);
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        // membuat variabel dari model
-        $data = new About;
-
-        // ketentuan valuenya
-        $rules = [
-            'gambar' => 'required|url',
-            'judul' => 'required',
-            'deskripsi' => 'Required'
-        ];
-
-        // validator manual jika gagal tambah
-        $validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), [
+            'judul' => 'nullable|string',
+            'deskripsi' => 'nullable|string',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+        ]);
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => 'gagal memasukan data',
+                'message' => 'Gagal memasukkan data',
                 'data' => $validator->errors(),
-            ], 404);
+            ], 422);
         }
-
-        // validasi tambah data
-        $data->gambar = $request->gambar;
-        $data->judul = $request->judul;
-        $data->deskripsi = $request->deskripsi;
-        $post = $data->save();
-
-        // mengvalidasi data sukses
+        $gambarPath = null;
+        if ($request->hasFile('gambar')) {
+            $gambarPath = $request->file('gambar')->store('about', 'public');
+        }
+        $data = About::create([
+            'judul' => $request->judul,
+            'deskripsi' => $request->deskripsi,
+            'gambar' => $gambarPath,
+        ]);
         return response()->json([
             'status' => true,
-            'message' => 'sukses memasukan data',
-        ], 200);
+            'message' => 'Sukses memasukkan data',
+            'data' => $data,
+        ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        // mencari data dengan id
         $data = About::find($id);
-
-        // if else jika ada dan tidak ada
         if($data) {
             return response()->json([
                 'status' => true,
@@ -85,77 +69,60 @@ class AboutController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
-        // mencari data dengan id
         $data = About::find($id);
-
-        // jika id tidak ada
-        if(empty($data)) {
+        if (!$data) {
             return response()->json([
                 'status' => false,
-                'message' => 'data tidak di temukan',
+                'message' => 'Data tidak ditemukan',
             ], 404);
         }
-
-        // ketentuan value data
-        $rules = [
-            'gambar' => 'required|url',
-            'judul' => 'required',
-            'deskripsi' => 'required'
-        ];
-
-        // validator jika gagal
-        $validator = validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), [
+            'judul' => 'nullable|string',
+            'deskripsi' => 'nullable|string',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+        ]);
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => 'gagal update data',
+                'message' => 'Gagal update data',
                 'data' => $validator->errors(),
-            ], 404);
+            ], 422);
         }
-
-        // input data
-        $data->gambar = $request->gambar;
-        $data->judul = $request->judul;
-        $data->deskripsi = $request->deskripsi;
-        
-        //data di save
-        $update = $data->save();
-
+        $data->judul = $request->judul ?? $data->judul;
+        $data->deskripsi = $request->deskripsi ?? $data->deskripsi;
+        if ($request->hasFile('gambar')) {
+            if ($data->gambar && Storage::disk('public')->exists($data->gambar)) {
+                Storage::disk('public')->delete($data->gambar);
+            }
+            $gambarPath = $request->file('gambar')->store('about', 'public');
+            $data->gambar = $gambarPath;
+        }
+        $data->save();
         return response()->json([
             'status' => true,
-            'message' => 'sukses mengupdate data'
-        ], 200);
+            'message' => 'Sukses mengupdate data',
+            'data' => $data,
+        ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        // mecari data menggunakan id
         $data = About::find($id);
-
-        // jika data tidak ditemukan
-        if (empty($data)) {
+        if (!$data) {
             return response()->json([
                 'status' => false,
-                'message' => 'data tidak ditemukan',
+                'message' => 'Data tidak ditemukan',
             ], 404);
         }
-
-        //data di hapus
-        $delete = $data->delete();
-
-        // validasi jika data berhasil
+        if ($data->gambar && Storage::disk('public')->exists($data->gambar)) {
+            Storage::disk('public')->delete($data->gambar);
+        }
+        $data->delete();
         return response()->json([
             'status' => true,
-            'message', 'sukses menghapus data'        
-        ], 200);
-
+            'message' => 'Data berhasil dihapus',
+        ]);
     }
 }

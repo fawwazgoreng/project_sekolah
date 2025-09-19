@@ -27,7 +27,7 @@ class SejarahController extends Controller
         $validator = Validator::make($request->all(), [
             'judul' => 'nullable|string',
             'deskripsi' => 'nullable|string',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif',
         ]);
 
         if ($validator->fails()) {
@@ -88,7 +88,7 @@ class SejarahController extends Controller
         $validator = Validator::make($request->all(), [
             'judul' => 'nullable|string',
             'deskripsi' => 'nullable|string',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif',
         ]);
 
         if ($validator->fails()) {

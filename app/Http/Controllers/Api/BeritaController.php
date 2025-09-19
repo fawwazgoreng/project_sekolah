@@ -22,13 +22,12 @@ class BeritaController extends Controller
             'data' => $data,
         ]);
     }
-
     public function store(Request $request)
     {
         $rules = [
             'judul' => 'required|string|max:255',
             'deskripsi' => 'required|string',
-            'gambar' => 'required|file|image|max:2048',
+            'gambar' => 'required|file|image',
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
@@ -84,7 +83,7 @@ class BeritaController extends Controller
         $rules = [
             'judul' => 'required|string|max:255',
             'deskripsi' => 'required|string',
-            'gambar' => 'nullable|file|image|max:2048',
+            'gambar' => 'nullable|file|image',
         ];
 
         $validator = Validator::make($request->all(), $rules);
