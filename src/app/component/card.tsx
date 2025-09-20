@@ -47,7 +47,7 @@ export const Card: React.FC<Props> = ({ Arrow }) => {
 
     return (
         <>
-            {data ? (
+            {data.length > 0 ? (
                 <Slider {...settings} className="w-full overflow-hidden">
                     {data.map((res, loop) => {
                         return (

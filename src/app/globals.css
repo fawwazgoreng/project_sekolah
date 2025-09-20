@@ -58,6 +58,7 @@ body {
   }
 }
 
+
 .infiniteScales {
   animation: infiniteScale 12s linear 10s infinite alternate;
 }
