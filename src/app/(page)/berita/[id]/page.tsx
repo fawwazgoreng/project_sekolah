@@ -32,7 +32,7 @@ export default function BeritaDetail() {
                         <p>{berita.created_at?.split("T")[0]}</p>
                         {berita.gambar && (
                             <Image
-                                className="w-full h-auto max-h-[450px] object-cover object-center"
+                                className="w-full h-auto  object-cover object-center"
                                 src={`${berita.gambar}`}
                                 alt={berita.judul}
                                 width={1000}

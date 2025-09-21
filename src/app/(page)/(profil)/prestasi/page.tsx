@@ -107,7 +107,7 @@ export default function Prestasi() {
                     {currentData.map((res, loop) => (
                         <div
                             key={loop}
-                            className="bg-white/90 text-black max-w-full w-[49%] overflow-hidden md:flex-row justify-center shadow-lg inset-shadow-xs rounded-[14px] flex flex-col gap-5 pr-2"
+                            className="bg-white/90 text-black max-w-full md:w-[49%] w-full overflow-hidden md:flex-row justify-center shadow-lg inset-shadow-xs rounded-[14px] flex flex-col gap-5 pr-2"
                         >
                             <Image
                                 className="md:rounded-[14px] object-cover object-center w-full md:w-1/2 xl:w-[35%] h-auto"

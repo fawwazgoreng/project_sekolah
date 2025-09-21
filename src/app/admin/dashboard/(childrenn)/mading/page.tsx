@@ -101,13 +101,13 @@ export default function MadingAdmin() {
           </button>
         </div>
       )}
-      <div className="mt-5 w-full flex flex-wrap justify-around gap-y-6">
+      <div className="mt-5 w-full grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         {currentData.map((res) => (
           <div
             key={res.id}
-            className="w-full flex flex-col lg:w-[48%] xl:w-[32%] pb-2 shadow-lg rounded-md overflow-hidden"
+            className="shadow-md rounded-md overflow-hidden"
           >
-            <span className="w-full h-56 overflow-hidden inline-block">
+            <div className="w-full h-56 overflow-hidden">
               <Image
                 src={`${process.env.NEXT_PUBLIC_BASEPICTURE}/storage/kesiswaan/${res.gambar}`}
                 alt={res.gambar}
@@ -115,7 +115,7 @@ export default function MadingAdmin() {
                 height={800}
                 className="duration-300 w-full h-full object-center object-cover"
               />
-            </span>
+            </div>
             <h1 className="w-11/12 flex mx-auto text-xl font-bold mt-2">
               {res.judul}
             </h1>

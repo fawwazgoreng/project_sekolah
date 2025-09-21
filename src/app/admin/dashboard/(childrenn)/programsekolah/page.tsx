@@ -39,11 +39,11 @@ export default function ProgramSekolahAdmin() {
       >
         Tambah
       </Link>
-      <div className="mt-5 w-full flex flex-wrap justify-around gap-y-6">
+      <div className="mt-5 w-full flex flex-wrap justify-around gap-6">
         {data.map((res) => (
           <div
             key={res.id}
-            className="w-full lg:w-[48%] xl:w-[32%] min-h-96 shadow-lg rounded-md overflow-hidden"
+            className="w-full lg:w-[45%] min-h-96 shadow-lg rounded-md overflow-hidden"
           >
             <span className="w-full h-48 overflow-hidden inline-block">
               <Image

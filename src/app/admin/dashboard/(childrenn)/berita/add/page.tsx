@@ -128,8 +128,6 @@ export default function AddBeritaAdmin() {
             required
           />
         </span>
-
-        {/* Submit Button */}
         <button
           type="submit"
           disabled={isSubmitting}

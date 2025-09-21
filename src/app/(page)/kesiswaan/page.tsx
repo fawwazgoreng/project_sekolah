@@ -80,8 +80,8 @@ export default function Gallery() {
             <div className="w-11/12 mt-10 md:w-5/6 flex mx-auto flex-wrap justify-center items-center gap-4 ">
                 {currentData.map((res, loop) => {
                     return (
-                        <div key={loop} className="lg:w-[30%] xl:w-[23%] sm:w-[48%] w-full group relative overflow-hidden rounded-lg">
-                            <Image src={`${process.env.NEXT_PUBLIC_BASEPICTURE}/storage/kesiswaan/${res.gambar}`} alt={res.gambar} width={800} height={800} className="group-hover:blur-sm duration-500" />
+                        <div key={loop} className="lg:w-[30%] xl:w-[23%] sm:w-[48%] h-72 w-full group relative overflow-hidden rounded-lg">
+                            <Image src={`${process.env.NEXT_PUBLIC_BASEPICTURE}/storage/kesiswaan/${res.gambar}`} alt={res.gambar} width={800} height={800} className="w-full h-full items-center object-cover group-hover:blur-sm duration-500" />
                             <div className="absolute top-full flex flex-col bg-black opacity-50 font-bold text-white z-10 group-hover:top-0 duration-500 w-full h-0 overflow-hidden group-hover:w-full group-hover:h-full">
                             </div>
                             <div className="absolute top-full w-full mx-auto self-auto text-white z-20 group-hover:top-0 duration-500 h-0 overflow-hidden group-hover:h-full">

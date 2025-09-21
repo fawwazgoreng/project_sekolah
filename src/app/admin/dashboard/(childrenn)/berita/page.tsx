@@ -81,7 +81,6 @@ export default function BeritaAdmin() {
             >
               <ChevronLeft className="h-6 w-6 flex mx-auto mt-1 text-gray-800" />
             </button>
-
             {[...Array(totalPages)].map((_, index) => {
               const page = index + 1;
               return (
@@ -114,14 +113,14 @@ export default function BeritaAdmin() {
         )}
 
         {/* List Berita */}
-        <div className="mt-5 w-full flex flex-wrap justify-around gap-y-6">
+        <div className="mt-5 w-full grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
           {currentData.map((res, loop) => {
             return (
               <div
                 key={loop}
-                className="w-full lg:w-[48%] xl:w-[32%] min-h-96 shadow-lg rounded-md overflow-hidden"
+                className="w-full shadow-lg rounded-md overflow-hidden"
               >
-                <span className="w-full h-48 overflow-hidden inline-block">
+                <div className="w-full h-56  overflow-hidden">
                   <Image
                     priority
                     src={`${res.gambar}`}
@@ -130,7 +129,7 @@ export default function BeritaAdmin() {
                     height={800}
                     className="w-full h-full object-center object-cover"
                   />
-                </span>
+                </div>
                 <h1 className="w-11/12 flex mx-auto text-xl font-bold mt-2">
                   {res.judul}
                 </h1>
